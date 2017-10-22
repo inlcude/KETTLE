@@ -2,32 +2,37 @@
 #define __SINGLETON_TEMPLATE_H__
 
 #include"COMMONALLOC.h"
-template<typename T>
-class Singleton
+
+namespace KETTLE
 {
-public:
-	static T*    GetInstance()
+	template<typename T>
+	class Singleton
 	{
-		if (!__instance)
+	public:
+		static T*    GetInstance()
 		{
-			// 做线程安全处理
 			if (!__instance)
-				__instance = new T();
+			{
+				// 做线程安全处理
+				if (!__instance)
+					__instance = new T();
+			}
+
+			return __instance;
 		}
 
-		return __instance;
-	}
+		~Singleton()
+		{
+			SAFE_DELETE_PTR(__instance);
+		}
+	protected:
+		Singleton() {};
 
-	~Singleton()
-	{
-		SAFE_DELETE_PTR(__instance);
-	}
-protected:
-	Singleton() {};
+		static T*   __instance;
+	};
 
-	static T*   __instance;
-};
+	template<typename T>
+	T* Singleton<T>::__instance = NULL;
+}
 
-template<typename T>
-T* Singleton<T>::__instance = NULL;
 #endif

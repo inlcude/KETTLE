@@ -4,18 +4,31 @@
 #include "stdafx.h"
 
 #include"SingltonTemplate.h"
+#include"TemplateDelegate.h"
 
-class testclass :public Singleton<testclass>
+#include"VarList.h"
+using namespace KETTLE;
+class testclass
 {
 public:
-	void Invoke()
+	void Invoke(int* param)
 	{
 		printf("abcd");
 	}
 };
+
+
 int main()
 {
-	testclass::GetInstance()->Invoke();
+	EventPool<int>     pool;
+	testclass clas_obj;
+	pool.Attach<testclass>(&clas_obj, &testclass::Invoke);
+
+	int a = 0;
+	pool.Invoke(&a);
+
+	CVarList var;
+	
     return 0;
 }
 

@@ -3,13 +3,14 @@
 // 特定于项目的包含文件
 //
 
-#pragma once
+#ifndef __STDAFX_H__
+#define __STDAFX_H__
 
 #include "targetver.h"
 
 #include <stdio.h>
 #include <tchar.h>
-
+#endif
 
 
 // TODO:  在此处引用程序需要的其他头文件

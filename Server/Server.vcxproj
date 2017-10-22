@@ -149,15 +149,18 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Common\COMMONALLOC.h" />
+    <ClInclude Include="..\Common\Platform.h" />
     <ClInclude Include="..\Common\SingltonTemplate.h" />
     <ClInclude Include="..\Common\TemplateDelegate.h" />
-    <ClInclude Include="Platform.h" />
+    <ClInclude Include="..\Common\ThreadMutex.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="VarList.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Common\SingltonTemplate.cpp" />
     <ClCompile Include="..\Common\TemplateDelegate.cpp" />
+    <ClCompile Include="..\Common\ThreadMutex.cpp" />
     <ClCompile Include="Server.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -165,6 +168,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="VarList.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
