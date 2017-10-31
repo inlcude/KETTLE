@@ -69,6 +69,8 @@ namespace	KETTLE
 		virtual void                   SetDouble64(KETTLE::int32 nPos, KETTLE::double64 nValue) = 0;
 		virtual KETTLE::int8*          GetString(KETTLE::int32 nPos) = 0;
 		virtual void                   SetString(KETTLE::int32 nPos, KETTLE::int8* nValue) = 0;
+
+		virtual KETTLE::int32          GetSize() = 0;
 	};
 
 	template<int32 InitSize>
@@ -79,7 +81,10 @@ namespace	KETTLE
 		{
 			Init();
 		}
-		virtual ~VarList(){}
+		virtual ~VarList()
+		{
+			CleanUp();
+		}
 
 		virtual KETTLE::int8           GetInt8(KETTLE::int32 nPos)
 		{
@@ -89,7 +94,7 @@ namespace	KETTLE
 		}
 		virtual void                   SetInt8(KETTLE::int32 nPos, KETTLE::int8 nValue)
 		{
-			if (m_nCurPos >= m_nVarListSize) return;
+			if (nPos >= m_nCurPos) return;
 			if (m_pData[nPos].m_Type == common_data::VT_STRING)
 				SAFE_DELETE_ARRAY(m_pData[nPos].m_strValue);
 			m_pData[m_nCurPos].m_nValue8 = nValue;
@@ -103,7 +108,7 @@ namespace	KETTLE
 		}
 		virtual void                   SetUInt8(KETTLE::int32 nPos, KETTLE::uint8 nValue)
 		{
-			if (m_nCurPos >= m_nVarListSize) return;
+			if (nPos >= m_nCurPos) return;
 			if (m_pData[nPos].m_Type == common_data::VT_STRING)
 				SAFE_DELETE_ARRAY(m_pData[nPos].m_strValue);
 			m_pData[m_nCurPos].m_nValueU8 = nValue;
@@ -117,7 +122,7 @@ namespace	KETTLE
 		}
 		virtual void                   SetInt16(KETTLE::int32 nPos, KETTLE::int16 nValue)
 		{
-			if (m_nCurPos >= m_nVarListSize) return;
+			if (nPos >= m_nCurPos) return;
 			if (m_pData[nPos].m_Type == common_data::VT_STRING)
 				SAFE_DELETE_ARRAY(m_pData[nPos].m_strValue);
 			m_pData[m_nCurPos].m_nValue16 = nValue;
@@ -131,7 +136,7 @@ namespace	KETTLE
 		}
 		virtual void                   SetUInt16(KETTLE::int32 nPos, KETTLE::uint16 nValue)
 		{
-			if (m_nCurPos >= m_nVarListSize) return;
+			if (nPos >= m_nCurPos) return;
 			if (m_pData[nPos].m_Type == common_data::VT_STRING)
 				SAFE_DELETE_ARRAY(m_pData[nPos].m_strValue);
 			m_pData[m_nCurPos].m_nValue16 = nValue;
@@ -145,7 +150,7 @@ namespace	KETTLE
 		}
 		virtual void                   SetInt32(KETTLE::int32 nPos, KETTLE::int32 nValue)
 		{
-			if (m_nCurPos >= m_nVarListSize) return;
+			if (nPos >= m_nCurPos) return;
 			if (m_pData[nPos].m_Type == common_data::VT_STRING)
 				SAFE_DELETE_ARRAY(m_pData[nPos].m_strValue);
 			m_pData[m_nCurPos].m_nValue32 = nValue;
@@ -159,7 +164,7 @@ namespace	KETTLE
 		}
 		virtual void                   SetUInt32(KETTLE::int32 nPos, KETTLE::uint32 nValue)
 		{
-			if (m_nCurPos >= m_nVarListSize) return;
+			if (nPos >= m_nCurPos) return;
 			if (m_pData[nPos].m_Type == common_data::VT_STRING)
 				SAFE_DELETE_ARRAY(m_pData[nPos].m_strValue);
 			m_pData[m_nCurPos].m_nValueU32 = nValue;
@@ -173,7 +178,7 @@ namespace	KETTLE
 		}
 		virtual void                   SetInt64(KETTLE::int32 nPos, KETTLE::int64 nValue)
 		{
-			if (m_nCurPos >= m_nVarListSize) return;
+			if (nPos >= m_nCurPos) return;
 			if (m_pData[nPos].m_Type == common_data::VT_STRING)
 				SAFE_DELETE_ARRAY(m_pData[nPos].m_strValue);
 			m_pData[m_nCurPos].m_nValue64 = nValue;
@@ -187,7 +192,7 @@ namespace	KETTLE
 		}
 		virtual void                   SetUInt64(KETTLE::int32 nPos, KETTLE::uint64 nValue)
 		{
-			if (m_nCurPos >= m_nVarListSize) return;
+			if (nPos >= m_nCurPos) return;
 			if (m_pData[nPos].m_Type == common_data::VT_STRING)
 				SAFE_DELETE_ARRAY(m_pData[nPos].m_strValue);
 			m_pData[m_nCurPos].m_nValueU64 = nValue;
@@ -201,7 +206,7 @@ namespace	KETTLE
 		}
 		virtual void                   SetFloat32(KETTLE::int32 nPos, KETTLE::float32 nValue)
 		{
-			if (m_nCurPos >= m_nVarListSize) return;
+			if (nPos >= m_nCurPos) return;
 			if (m_pData[nPos].m_Type == common_data::VT_STRING)
 				SAFE_DELETE_ARRAY(m_pData[nPos].m_strValue);
 			m_pData[m_nCurPos].m_fValue = nValue;
@@ -215,7 +220,7 @@ namespace	KETTLE
 		}
 		virtual void                   SetDouble64(KETTLE::int32 nPos, KETTLE::double64 nValue)
 		{
-			if (m_nCurPos >= m_nVarListSize) return;
+			if (nPos >= m_nCurPos) return;
 			if (m_pData[nPos].m_Type == common_data::VT_STRING)
 				SAFE_DELETE_ARRAY(m_pData[nPos].m_strValue);
 			m_pData[m_nCurPos].m_dValue = nValue;
@@ -230,7 +235,7 @@ namespace	KETTLE
 		virtual void                   SetString(KETTLE::int32 nPos, KETTLE::int8* nValue)
 		{
 			if (!nValue) return;
-			if (m_nCurPos >= m_nVarListSize) return;
+			if (nPos >= m_nCurPos) return;
 			if (m_pData[nPos].m_Type == common_data::VT_STRING)
 				SAFE_DELETE_ARRAY(m_pData[nPos].m_strValue);
 			int32 nStrlen = strlen(nValue);
@@ -251,135 +256,134 @@ namespace	KETTLE
 		}
 		VarList& operator<< (KETTLE::int8 var)
 		{
-			if (m_nCurPos <= m_nVarListSize)
+			if (m_nCurPos >= m_nVarListSize)
 				Resize(2 * m_nVarListSize);
 			m_pData[m_nCurPos].m_nValue8 = var;
-			m_pData[m_nCurPos].m_Type = VT_INT8;
+			m_pData[m_nCurPos].m_Type = common_data::VT_INT8;
 			m_nCurPos++;
 			return *this;		
 		}
 
 		VarList& operator<< (KETTLE::uint8 var)
 		{
-			if (m_nCurPos <= m_nVarListSize)
+			if (m_nCurPos >= m_nVarListSize)
 				Resize(2 * m_nVarListSize);
 			m_pData[m_nCurPos].m_nValueU8 = var;
-			m_pData[m_nCurPos].m_Type = VT_UINT8;
+			m_pData[m_nCurPos].m_Type = common_data::VT_UINT8;
 			m_nCurPos++;
 			return *this;
 		}
 		VarList& operator<< (KETTLE::int16 var)
 		{
-			if (m_nCurPos <= m_nVarListSize)
+			if (m_nCurPos >= m_nVarListSize)
 				Resize(2 * m_nVarListSize);
 			m_pData[m_nCurPos].m_nValue16 = var;
-			m_pData[m_nCurPos].m_Type = VT_INT16;
+			m_pData[m_nCurPos].m_Type = common_data::VT_INT16;
 			m_nCurPos++;
 			return *this;
 		}
 		VarList& operator<< (KETTLE::uint16 var)
 		{
-			if (m_nCurPos <= m_nVarListSize)
+			if (m_nCurPos >= m_nVarListSize)
 				Resize(2 * m_nVarListSize);
 			m_pData[m_nCurPos].m_nValueU16 = var;
-			m_pData[m_nCurPos].m_Type = VT_UINT16;
+			m_pData[m_nCurPos].m_Type = common_data::VT_UINT16;
 			m_nCurPos++;
 			return *this;
 		}
 		VarList& operator<< (KETTLE::int32 var)
 		{
-			if (m_nCurPos <= m_nVarListSize)
+			if (m_nCurPos >= m_nVarListSize)
 				Resize(2 * m_nVarListSize);
 			m_pData[m_nCurPos].m_nValue32 = var;
-			m_pData[m_nCurPos].m_Type = VT_INT32;
+			m_pData[m_nCurPos].m_Type = common_data::VT_INT32;
 			m_nCurPos++;
 			return *this;
 		}
 		VarList& operator<< (KETTLE::uint32 var)
 		{
-			if (m_nCurPos <= m_nVarListSize)
+			if (m_nCurPos >= m_nVarListSize)
 				Resize(2 * m_nVarListSize);
 			m_pData[m_nCurPos].m_nValueU32 = var;
-			m_pData[m_nCurPos].m_Type = VT_UINT32;
+			m_pData[m_nCurPos].m_Type = common_data::VT_UINT32;
 			m_nCurPos++;
 			return *this;
 		}
 		VarList& operator<< (KETTLE::int64 var)
 		{
-			if (m_nCurPos <= m_nVarListSize)
+			if (m_nCurPos >= m_nVarListSize)
 				Resize(2 * m_nVarListSize);
 			m_pData[m_nCurPos].m_nValue64 = var;
-			m_pData[m_nCurPos].m_Type = VT_INT64;
+			m_pData[m_nCurPos].m_Type = common_data::VT_INT64;
 			m_nCurPos++;
 			return *this;
 		}
 		VarList& operator<< (KETTLE::uint64 var)
 		{
-			if (m_nCurPos <= m_nVarListSize)
+			if (m_nCurPos >= m_nVarListSize)
 				Resize(2 * m_nVarListSize);
 			m_pData[m_nCurPos].m_nValueU64 = var;
-			m_pData[m_nCurPos].m_Type = VT_UINT64;
+			m_pData[m_nCurPos].m_Type = common_data::VT_UINT64;
 			m_nCurPos++;
 			return *this;
 		}
 		VarList& operator<< (KETTLE::float32 var)
 		{
-			if (m_nCurPos <= m_nVarListSize)
+			if (m_nCurPos >= m_nVarListSize)
 				Resize(2 * m_nVarListSize);
 			m_pData[m_nCurPos].m_fValue = var;
-			m_pData[m_nCurPos].m_Type = VT_FLOAT32;
+			m_pData[m_nCurPos].m_Type = common_data::VT_FLOAT32;
 			m_nCurPos++;
 			return *this;
 		}
 		VarList& operator<< (KETTLE::double64 var)
 		{
-			if (m_nCurPos <= m_nVarListSize)
+			if (m_nCurPos >= m_nVarListSize)
 				Resize(2 * m_nVarListSize);
 			m_pData[m_nCurPos].m_dValue = var;
-			m_pData[m_nCurPos].m_Type = VT_DOUBLE64;
+			m_pData[m_nCurPos].m_Type = common_data::VT_DOUBLE64;
 			m_nCurPos++;
 			return *this;
 		}
 		VarList& operator<< (KETTLE::int8* var)
 		{
-			if (m_nCurPos <= m_nVarListSize)
+			if (!var) return *this;
+			if (m_nCurPos >= m_nVarListSize)
 				Resize(2 * m_nVarListSize);
-			m_pData[m_nCurPos].m_dValue = var;
-			m_pData[m_nCurPos].m_Type = VT_DOUBLE64;
+			int32 nStrlen = strlen(var);
+			char* pStr = new char[nStrlen + 1];
+			memset(pStr, 0, nStrlen + 1);
+			strcpy(pStr, var);
+			m_pData[m_nCurPos].m_strValue = pStr;
+			m_pData[m_nCurPos].m_Type = common_data::VT_STRING;
 			m_nCurPos++;
 			return *this;
 		}
 		VarList& operator<< (const KETTLE::int8* var)
 		{
-			if (!nValue) return;
-			if (m_nCurPos >= m_nVarListSize) return;
-			if (m_pData[nPos].m_Type == VT_STRING)
-				SAFE_DELETE_ARRAY(m_pData[nPos].m_strValue);
-			int32 nStrlen = strlen(nValue);
+			if (!var) return *this;
+			if (m_nCurPos >= m_nVarListSize)
+				Resize(2 * m_nVarListSize);
+			int32 nStrlen = strlen(var);
 			char* pStr = new char[nStrlen + 1];
 			memset(pStr, 0, nStrlen + 1);
-			strcpy(pStr, nValue);
+			strcpy(pStr, var);
 			m_pData[m_nCurPos].m_strValue = pStr;
-			m_pData[m_nCurPos].m_Type = VT_STRING;
+			m_pData[m_nCurPos].m_Type = common_data::VT_STRING;
 			m_nCurPos++;
 			return *this;
 		}
 
 		KETTLE::int8* Serialize()
 		{
-			if (!nValue) return;
-			if (m_nCurPos >= m_nVarListSize) return;
-			if (m_pData[nPos].m_Type == VT_STRING)
-				SAFE_DELETE_ARRAY(m_pData[nPos].m_strValue);
-			int32 nStrlen = strlen(nValue);
-			char* pStr = new char[nStrlen + 1];
-			memset(pStr, 0, nStrlen + 1);
-			strcpy(pStr, nValue);
-			m_pData[m_nCurPos].m_strValue = pStr;
-			m_pData[m_nCurPos].m_Type = VT_STRING;
-			m_nCurPos++;
-			return *this;
+			return "";
 		}
+
+		virtual KETTLE::int32          GetSize()
+		{
+			return m_nCurPos;
+		}
+
 		void Serialize(const KETTLE::int8* pStr)
 		{
 
@@ -399,14 +403,14 @@ namespace	KETTLE
 		}
 		void                                   CleanUp()
 		{
-			for (int32 i = 0; i < m_nVarListSize; i++)
+			for (int32 i = 0; i < m_nCurPos; i++)
 			{
-				if (m_pData[i].m_Type == VT_STRING && m_pData[i].m_strValue)
+				if (m_pData[i].m_Type == common_data::VT_STRING && m_pData[i].m_strValue)
 					SAFE_DELETE_ARRAY(m_pData[i].m_strValue);
 			}
 
 			if (m_nVarListSize <= InitSize) return;
-			SAFE_DELETE_ARRAY(m_pData[i].m_strValue);
+			SAFE_DELETE_ARRAY(m_pData);
 		}
 		void                                   Resize(KETTLE::int32 nSize)
 		{
