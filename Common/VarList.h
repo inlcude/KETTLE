@@ -9,6 +9,7 @@ namespace	KETTLE
 		enum  VALUETYPE
 		{
 			VT_DEFAULT   = 0Xffffffff,
+			VT_UNKNOW    = 0,
 			VT_INT8      = 1,
 			VT_UINT8,
 			VT_INT16,
@@ -71,6 +72,7 @@ namespace	KETTLE
 		virtual void                   SetString(KETTLE::int32 nPos, KETTLE::int8* nValue) = 0;
 
 		virtual KETTLE::int32          GetSize() = 0;
+		virtual KETTLE::int32          GetMaxSize() = 0;
 	};
 
 	template<int32 InitSize>
@@ -248,10 +250,100 @@ namespace	KETTLE
 
 		VarList& operator= (const VarList& var)
 		{
+			if (m_nVarListSize < var.GetSize())
+				Resize(var.GetMaxSize());
+			InitializeList();
+
+			for (int32 i = 0; i < var.GetSize(); i++)
+			{
+				int8 nType = var.GetType(i);
+				switch (nType)
+				{
+				case common_data::VT_INT8:
+					*this << var.GetInt8(i);
+					break;
+				case common_data::VT_UINT8:
+					*this << var.GetUInt8(i);
+					break;
+				case common_data::VT_INT16:
+					*this << var.GetInt16(i);
+					break;
+				case common_data::VT_UINT16:
+					*this << var.GetUInt16(i);
+					break;
+				case common_data::VT_INT32:
+					*this << var.GetInt32(i);
+					break;
+				case common_data::VT_UINT32:
+					*this << var.GetUInt32(i);
+					break;
+				case common_data::VT_INT64:
+					*this << var.GetInt64(i);
+					break;
+				case common_data::VT_UINT64:
+					*this << var.GetUInt64(i);
+					break;
+				case common_data::VT_FLOAT32:
+					*this << var.GetFloat32(i);
+					break;
+				case common_data::VT_DOUBLE64:
+					*this << var.GetDouble64(i);
+					break;
+				case common_data::VT_STRING:
+					*this << var.GetString(i);
+					break;
+				default:
+					break;
+				}
+			}
+
 			return *this;
 		}
 		VarList& operator<< (const VarList& var)
 		{
+			for (int32 i = 0; i < var.GetSize(); i++)
+			{
+				int8 nType = var.GetType(i);
+				switch (nType)
+				{
+				case common_data::VT_INT8:
+					*this << var.GetInt8(i);
+					break;
+				case common_data::VT_UINT8:
+					*this << var.GetUInt8(i);
+					break;
+				case common_data::VT_INT16:
+					*this << var.GetInt16(i);
+					break;
+				case common_data::VT_UINT16:
+					*this << var.GetUInt16(i);
+					break;
+				case common_data::VT_INT32:
+					*this << var.GetInt32(i);
+					break;
+				case common_data::VT_UINT32:
+					*this << var.GetUInt32(i);
+					break;
+				case common_data::VT_INT64:
+					*this << var.GetInt64(i);
+					break;
+				case common_data::VT_UINT64:
+					*this << var.GetUInt64(i);
+					break;
+				case common_data::VT_FLOAT32:
+					*this << var.GetFloat32(i);
+					break;
+				case common_data::VT_DOUBLE64:
+					*this << var.GetDouble64(i);
+					break;
+				case common_data::VT_STRING:
+					*this << var.GetString(i);
+					break;
+				default:
+					break;
+				}
+			}
+
 			return *this;
 		}
 		VarList& operator<< (KETTLE::int8 var)
@@ -374,24 +466,276 @@ namespace	KETTLE
 			return *this;
 		}
 
-		KETTLE::int8* Serialize()
-		{
-			return "";
-		}
 
 		virtual KETTLE::int32          GetSize()
 		{
 			return m_nCurPos;
 		}
 
+		virtual KETTLE::int32          GetMaxSize()
+		{
+			return m_nVarListSize;
+		}
+
+		KETTLE::int8     GetType(const KETTLE::int32 nPos)
+		{
+			if (nPos >= m_nCurPos) return common_data::VT_UNKNOW;
+			return m_pData[nPos].m_Type;
+		}
+
+		KETTLE::int8* Serialize()
+		{
+			int32 nSize = 0;
+			for (int32 i = 0; i < GetSize(); ++i)
+			{
+				int8 nType = GetType(i);
+				switch (nType)
+				{
+				case common_data::VT_INT8:
+					nSize += sizeof(nType);
+					nSize += sizeof(int8);
+					break;
+				case common_data::VT_UINT8:
+					nSize += sizeof(nType);
+					nSize += sizeof(uint8);
+					break;
+				case common_data::VT_INT16:
+					nSize += sizeof(nType);
+					nSize += sizeof(int16);
+					break;
+				case common_data::VT_UINT16:
+					nSize += sizeof(nType);
+					nSize += sizeof(uint16);
+					break;
+				case common_data::VT_INT32:
+					nSize += sizeof(nType);
+					nSize += sizeof(int32);
+					break;
+				case common_data::VT_UINT32:
+					nSize += sizeof(nType);
+					nSize += sizeof(uint32);
+					break;
+				case common_data::VT_INT64:
+					nSize += sizeof(nType);
+					nSize += sizeof(int64);
+					break;
+				case common_data::VT_UINT64:
+					nSize += sizeof(nType);
+					nSize += sizeof(uint64);
+					break;
+				case common_data::VT_FLOAT32:
+					nSize += sizeof(nType);
+					nSize += sizeof(float32);
+					break;
+				case common_data::VT_DOUBLE64:
+					nSize += sizeof(nType);
+					nSize += sizeof(double64);
+					break;
+				case common_data::VT_STRING:
+					nSize += sizeof(nType);
+					nSize += strlen(m_pData[i].m_strValue) + 1;
+					nSize += sizeof(int32);
+					break;
+				default:
+					break;
+				}
+			}
+
+			nSize += sizeof(m_nCurPos);
+			int8* pStr = new int8[nSize];
+			int8* TempStr = pStr;
+			memset(pStr, 0, nSize);
+			memcpy(pStr, &m_nCurPos, sizeof(m_nCurPos));
+			pStr += sizeof(m_nCurPos);
+
+			for (int32 i = 0; i < m_nCurPos; ++i)
+			{
+				int8 nType = GetType(i);
+				switch (nType)
+				{
+				case common_data::VT_INT8:
+					memcpy(pStr, &nType, sizeof(nType));
+					pStr += sizeof(nType);
+					memcpy(pStr, &m_pData[i].m_nValue8, sizeof(m_pData[i].m_nValue8));
+					pStr += sizeof(m_pData[i].m_nValue8);
+					break;
+				case common_data::VT_UINT8:
+					memcpy(pStr, &nType, sizeof(nType));
+					pStr += sizeof(nType);
+					memcpy(pStr, &m_pData[i].m_nValueU8, sizeof(m_pData[i].m_nValueU8));
+					pStr += sizeof(m_pData[i].m_nValueU8);
+					break;
+				case common_data::VT_INT16:
+					memcpy(pStr, &nType, sizeof(nType));
+					pStr += sizeof(nType);
+					memcpy(pStr, &m_pData[i].m_nValue16, sizeof(m_pData[i].m_nValue16));
+					pStr += sizeof(m_pData[i].m_nValue16);
+					break;
+				case common_data::VT_UINT16:
+					memcpy(pStr, &nType, sizeof(nType));
+					pStr += sizeof(nType);
+					memcpy(pStr, &m_pData[i].m_nValueU16, sizeof(m_pData[i].m_nValueU16));
+					pStr += sizeof(m_pData[i].m_nValueU16);
+					break;
+				case common_data::VT_INT32:
+					memcpy(pStr, &nType, sizeof(nType));
+					pStr += sizeof(nType);
+					memcpy(pStr, &m_pData[i].m_nValue32, sizeof(m_pData[i].m_nValue32));
+					pStr += sizeof(m_pData[i].m_nValue32);
+					break;
+				case common_data::VT_UINT32:
+					memcpy(pStr, &nType, sizeof(nType));
+					pStr += sizeof(nType);
+					memcpy(pStr, &m_pData[i].m_nValueU32, sizeof(m_pData[i].m_nValueU32));
+					pStr += sizeof(m_pData[i].m_nValueU32);
+					break;
+				case common_data::VT_INT64:
+					memcpy(pStr, &nType, sizeof(nType));
+					pStr += sizeof(nType);
+					memcpy(pStr, &m_pData[i].m_nValue64, sizeof(m_pData[i].m_nValue64));
+					pStr += sizeof(m_pData[i].m_nValue64);
+					break;
+				case common_data::VT_UINT64:
+					memcpy(pStr, &nType, sizeof(nType));
+					pStr += sizeof(nType);
+					memcpy(pStr, &m_pData[i].m_nValueU64, sizeof(m_pData[i].m_nValueU64));
+					pStr += sizeof(m_pData[i].m_nValueU64);
+					break;
+				case common_data::VT_FLOAT32:
+					memcpy(pStr, &nType, sizeof(nType));
+					pStr += sizeof(nType);
+					memcpy(pStr, &m_pData[i].m_fValue, sizeof(m_pData[i].m_fValue));
+					pStr += sizeof(m_pData[i].m_fValue);
+					break;
+				case common_data::VT_DOUBLE64:
+					memcpy(pStr, &nType, sizeof(nType));
+					pStr += sizeof(nType);
+					memcpy(pStr, &m_pData[i].m_dValue, sizeof(m_pData[i].m_dValue));
+					pStr += sizeof(m_pData[i].m_dValue);
+					break;
+					case common_data::VT_STRING:
+					{
+						memcpy(pStr, &nType, sizeof(nType));
+						pStr += sizeof(nType);
+						int32 nLen = strlen(m_pData[i].m_strValue) + 1;
+						memcpy(pStr, &nLen, sizeof(nLen));
+						pStr += sizeof(nLen);
+						memcpy(pStr, &m_pData[i].m_strValue, nLen);
+						pStr += nLen;
+					}break;
+				default:
+					break;
+				}
+			}
+
+			return TempStr;
+		}
 		void Serialize(const KETTLE::int8* pStr)
 		{
-
 		}
 		void Serialize(KETTLE::int8* pStr)
 		{
-			
+			InitializeList();
+			int32 nSize = 0;
+			memcpy(&nSize, pStr, sizeof(nSize));
+			pStr += sizeof(nSize);
+			if (nSize <= 0) return;
+			for (int32 i = 0; i < nSize; ++i)
+			{
+				int8 nType = common_data::VT_UNKNOW;
+				memcpy(&nType, pStr, sizeof(nType));
+				pStr += sizeof(nType);
+				switch (nType)
+				{
+					case common_data::VT_INT8:
+					{
+						int8 nValue = 0;
+						memcpy(&nValue, pStr, sizeof(nValue));
+						pStr += sizeof(nValue);
+						*this << nValue;
+					}break;
+					case common_data::VT_UINT8:
+					{
+						uint8 nValue = 0;
+						memcpy(&nValue, pStr, sizeof(nValue));
+						pStr += sizeof(nValue);
+						*this << nValue;
+					}break;
+					case common_data::VT_INT16:
+					{
+						int16 nValue = 0;
+						memcpy(&nValue, pStr, sizeof(nValue));
+						pStr += sizeof(nValue);
+						*this << nValue;
+					}break;
+					case common_data::VT_UINT16:
+					{
+						uint16 nValue = 0;
+						memcpy(&nValue, pStr, sizeof(nValue));
+						pStr += sizeof(nValue);
+						*this << nValue;
+					}break;
+					case common_data::VT_INT32:
+					{
+						int32 nValue = 0;
+						memcpy(&nValue, pStr, sizeof(nValue));
+						pStr += sizeof(nValue);
+						*this << nValue;
+					}break;
+					case common_data::VT_UINT32:
+					{
+						uint32 nValue = 0;
+						memcpy(&nValue, pStr, sizeof(nValue));
+						pStr += sizeof(nValue);
+						*this << nValue;
+					}break;
+					case common_data::VT_INT64:
+					{
+						int64 nValue = 0;
+						memcpy(&nValue, pStr, sizeof(nValue));
+						pStr += sizeof(nValue);
+						*this << nValue;
+					}break;
+					case common_data::VT_UINT64:
+					{
+						uint64 nValue = 0;
+						memcpy(&nValue, pStr, sizeof(nValue));
+						pStr += sizeof(nValue);
+						*this << nValue;
+					}break;
+					case common_data::VT_FLOAT32:
+					{
+						float32 nValue = 0;
+						memcpy(&nValue, pStr, sizeof(nValue));
+						pStr += sizeof(nValue);
+						*this << nValue;
+					}break;
+					case common_data::VT_DOUBLE64:
+					{
+						double64 nValue = 0;
+						memcpy(&nValue, pStr, sizeof(nValue));
+						pStr += sizeof(nValue);
+						*this << nValue;
+					}break;
+					case common_data::VT_STRING:
+					{
+						int32 nStringSize = 0;
+						memcpy(&nStringSize, pStr, sizeof(nStringSize));
+						pStr += sizeof(nStringSize);
+						int8* pString = new int8[nStringSize];
+						memset(pString, 0, nStringSize);
+						memcpy(pString, pStr, nStringSize);
+						pStr += nStringSize;
+						*this << pString;
+						SAFE_DELETE_ARRAY(pString);
+					}break;
+					default:
+						return;
+				}
+			}
 		}
+
+
 
 	protected:
 		void                                   Init()
@@ -400,6 +744,7 @@ namespace	KETTLE
 			m_nVarListSize = InitSize;
 			memset((&m_InitData[0]), 0, sizeof(m_InitData));
 			m_pData = &(m_InitData[0]);
+			m_nSerializeSize = 0;
 		}
 		void                                   CleanUp()
 		{
@@ -423,11 +768,29 @@ namespace	KETTLE
 			m_pData = pData;
 			m_nVarListSize = nSize;
 		}
+		VOID                                   InitializeList()
+		{
+			for (int32 i = 0; i < m_nCurPos; ++i)
+			{
+				if (m_pData[i].m_Type == common_data::VT_STRING && m_pData[i].m_strValue){
+					m_pData[i].m_Type = common_data::VT_DEFAULT;
+					SAFE_DELETE_ARRAY(m_pData[i].m_strValue);
+				}
+				else {
+					m_pData[i].m_Type = common_data::VT_DEFAULT;
+					m_pData[i].m_dValue = 0;
+				}
+			}
+
+			m_nCurPos = 0;
+			m_nSerializeSize = 0;
+		}
 	private:
 		struct common_data                            m_InitData[InitSize];
 		struct common_data*                           m_pData;
-		KETTLE::int32                          m_nVarListSize;
-		KETTLE::int32                          m_nCurPos;
+		KETTLE::int32                                 m_nVarListSize;
+		KETTLE::int32                                 m_nCurPos;
+		KETTLE::int32                                 m_nSerializeSize;
 	};
 	typedef VarList<8>        CVarList;
 }
