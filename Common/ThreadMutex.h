@@ -11,6 +11,7 @@ namespace KETTLE
 #ifdef __WINDOWS__
 			m_Handle = CreateMutex(NULL, false, NULL);
 #elif 
+
 #endif
 		}
 

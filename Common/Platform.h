@@ -4,6 +4,7 @@
 #ifdef __LINUX__
 #elif __WINDOWS__
 #include<windows.h>
+#include<WinSock2.h>
 #endif
 
 namespace KETTLE
