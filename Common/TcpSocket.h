@@ -10,7 +10,8 @@ namespace KETTLE
 		~TcpSocket();
 
 		KETTLE::int32                    GetSocket();
-		void                             SetBlockMode();
+		bool                             SetBlockMode();
+		bool                             SetKeepAlive();
 	private:
 		KETTLE::int32                    m_Socket;
 	};

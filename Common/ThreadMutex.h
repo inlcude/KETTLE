@@ -8,21 +8,27 @@ namespace KETTLE
 	{
 	public:
 		ThreadMutex() {
-#ifdef __WINDOWS__
+#if __WINDOWS__
 			m_Handle = CreateMutex(NULL, false, NULL);
-#elif 
+#elif __LINUX__
 
 #endif
 		}
 
 		bool Wait()
 		{
+#if __WINDOWS__
 			WaitForSingleObject(m_Handle, INFINITE);
+#elif __LINUX__
+#endif
 			return true;
 		}
 		~ThreadMutex()
 		{
+#if __WINDOWS__
 			CloseHandle(m_Handle);
+#elif __LINUX__
+#endif
 		}
 	private:
 		HANDLE           m_Handle;

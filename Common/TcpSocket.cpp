@@ -20,12 +20,21 @@ KETTLE::int32 TcpSocket::GetSocket()
 	return m_Socket;
 }
 
-void TcpSocket::SetBlockMode()
+bool TcpSocket::SetBlockMode()
 {
 #if __WINDOWS__
 	u_long iMode = 0;
 	if (ioctlsocket(m_Socket, FIONBIO, &iMode) < 0)
-		;//do some thing
+	{
+		return false;
+	}
 #elif __LINUX__
 #endif
+	return true;
+}
+
+bool TcpSocket::SetKeepAlive()
+{
+
+	return true;
 }
