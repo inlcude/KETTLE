@@ -151,6 +151,7 @@
     <ClInclude Include="..\Common\COMMONALLOC.h" />
     <ClInclude Include="..\Common\Platform.h" />
     <ClInclude Include="..\Common\SingltonTemplate.h" />
+    <ClInclude Include="..\Common\TcpSocket.h" />
     <ClInclude Include="..\Common\TemplateDelegate.h" />
     <ClInclude Include="..\Common\TemplateFunctions.h" />
     <ClInclude Include="..\Common\ThreadMutex.h" />
@@ -160,6 +161,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Common\SingltonTemplate.cpp" />
+    <ClCompile Include="..\Common\TcpSocket.cpp" />
     <ClCompile Include="..\Common\TemplateDelegate.cpp" />
     <ClCompile Include="..\Common\TemplateFunctions.cpp" />
     <ClCompile Include="..\Common\ThreadMutex.cpp" />
