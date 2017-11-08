@@ -9,6 +9,8 @@
 #include"TemplateFunctions.h"
 
 #include"VarList.h"
+
+#include<boost/shared_ptr.hpp>
 using namespace KETTLE;
 
 int main()
@@ -40,8 +42,10 @@ int main()
 		index = index % len;
 		var << d[index];
 	}
+	boost::shared_ptr<CVarList> ptr;
+	ptr.reset(&var);
 
-	printf("var size is %d\n", var.GetSize());
+	printf("var size is %d\n", ptr->GetSize());
 	CVarList otherVar;
 	printf("before other var size is %d\n", otherVar.GetSize());
 	otherVar.Serialize(var.Serialize());

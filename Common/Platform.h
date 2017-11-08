@@ -3,8 +3,10 @@
 
 #ifdef __LINUX__
 #elif __WINDOWS__
+#include<Winsock2.h>
 #include<windows.h>
-#include<WinSock2.h>
+
+#pragma comment(lib,"Ws2_32.lib")
 #endif
 
 namespace KETTLE
