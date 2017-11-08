@@ -38,4 +38,9 @@ set(boost_libraries boost_atomic-vc140-mt-1_65_1
 					boost_unit_test_framework-vc140-mt-1_65_1
 					boost_wave-vc140-mt-1_65_1
 					boost_wserialization-vc140-mt-1_65_1)
+if(WIN32)
+add_definitions(-D__WINDOWS__)
+else()
+add_definitions(-D__LINUX__)
+endif()
 add_subdirectory(Server)
