@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 3.10)
+aux_source_directory(../Common common_src)
+aux_source_directory(../Extern/boost/boost boost_src)
+set(BOOST_ROOT /Extern/boost/boost)
+add_subdirectory(Server)
