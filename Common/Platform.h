@@ -6,7 +6,6 @@
 #include<Winsock2.h>
 #include<windows.h>
 
-#pragma comment(lib,"Ws2_32.lib")
 #endif
 
 namespace KETTLE

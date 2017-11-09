@@ -7,10 +7,14 @@
 #include"SingltonTemplate.h"
 #include"TemplateDelegate.h"
 #include"TemplateFunctions.h"
+#include"TcpSocket.h"
 
 #include"VarList.h"
 
+#include<iostream>
 #include<boost/shared_ptr.hpp>
+#include<boost/timer.hpp>
+#include<boost/progress.hpp>
 using namespace KETTLE;
 
 int main()
@@ -42,9 +46,17 @@ int main()
 		index = index % len;
 		var << d[index];
 	}
+
+	boost::timer t;
+	std::cout << "max timespane:" << t.elapsed_max() / 3600 << "h" << std::endl;
+	std::cout << "min timespane" << t.elapsed_min() << "s" << std::endl;
+	std::cout << "now time elapsed:" << t.elapsed() << "s" << std::endl;
+	{
+		boost::progress_timer t2;
+	}
+	
 	boost::shared_ptr<CVarList> ptr;
 	ptr.reset(&var);
-
 	printf("var size is %d\n", ptr->GetSize());
 	CVarList otherVar;
 	printf("before other var size is %d\n", otherVar.GetSize());

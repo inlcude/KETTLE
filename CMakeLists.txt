@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 aux_source_directory(../Common common_src)
 aux_source_directory(../Extern/boost/boost boost_src)
+set(win_libraries ws2_32)
 set(boost_libraries boost_atomic-vc140-mt-1_65_1
                     boost_chrono-vc140-mt-1_65_1
 					boost_container-vc140-mt-1_65_1
