@@ -768,7 +768,7 @@ namespace	KETTLE
 			m_pData = pData;
 			m_nVarListSize = nSize;
 		}
-		VOID                                   InitializeList()
+		void                                   InitializeList()
 		{
 			for (int32 i = 0; i < m_nCurPos; ++i)
 			{
