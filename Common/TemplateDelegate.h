@@ -53,7 +53,7 @@ namespace KETTLE
 		template<typename T>
 		void Detach(T* _instance, void (T::*Funtions)(U*))
 		{
-			listpool::iterator iter = m_Pool.begin();
+			typename listpool::iterator iter = m_Pool.begin();
 			for (;iter != m_Pool.end();++iter)
 			{
 				if ((*iter)->GetClassObj() == _instance && *iter->GetClsFunc() == Funtions)
@@ -66,7 +66,7 @@ namespace KETTLE
 
 		void Invoke(U* a)
 		{
-			listpool::iterator iter = m_Pool.begin();
+			typename listpool::iterator iter = m_Pool.begin();
 			for (;iter != m_Pool.end();++iter)
 				(*iter)->Invoke(a);
 		}

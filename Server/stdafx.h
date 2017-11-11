@@ -6,10 +6,12 @@
 #ifndef __STDAFX_H__
 #define __STDAFX_H__
 
-#include "targetver.h"
+//#include "targetver.h"
 
 #include <stdio.h>
+#ifdef __WINDOWS__
 #include <tchar.h>
+#endif
 #endif
 
 

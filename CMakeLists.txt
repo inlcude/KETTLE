@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.9.1)
 aux_source_directory(../Common common_src)
 aux_source_directory(../Extern/boost/boost boost_src)
 set(win_libraries ws2_32)
