@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.9.1)
 aux_source_directory(../Common common_src)
 aux_source_directory(../Extern/boost/boost boost_src)
 set(win_libraries ws2_32)
+if(WIN32)
 set(boost_libraries boost_atomic-vc140-mt-1_65_1
                     boost_chrono-vc140-mt-1_65_1
 					boost_container-vc140-mt-1_65_1
@@ -39,6 +40,46 @@ set(boost_libraries boost_atomic-vc140-mt-1_65_1
 					boost_unit_test_framework-vc140-mt-1_65_1
 					boost_wave-vc140-mt-1_65_1
 					boost_wserialization-vc140-mt-1_65_1)
+else()
+
+set(boost_libraries boost_atomic-gcc-mt-1_65_1
+                    boost_chrono-gcc-mt-1_65_1
+					boost_container-gcc-mt-1_65_1
+					boost_context-gcc-mt-1_65_1
+					boost_coroutine-gcc-mt-1_65_1
+					boost_date_time-gcc-mt-1_65_1
+					boost_fiber-gcc-mt-1_65_1
+					boost_filesystem-gcc-mt-1_65_1
+					boost_graph-gcc-mt-1_65_1
+					boost_iostreams-gcc-mt-1_65_1
+					boost_locale-gcc-mt-1_65_1
+					boost_log_setup-gcc-mt-1_65_1
+					boost_log-gcc-mt-1_65_1
+					boost_math_c99f-gcc-mt-1_65_1
+					boost_math_c99l-gcc-mt-1_65_1
+					boost_math_c99-gcc-mt-1_65_1
+					boost_math_tr1f-gcc-mt-1_65_1
+					boost_math_tr1l-gcc-mt-1_65_1
+					boost_math_tr1-gcc-mt-1_65_1
+					boost_prg_exec_monitor-gcc-mt-1_65_1
+					boost_program_options-gcc-mt-1_65_1
+					boost_python-gcc-mt-1_65_1
+					boost_random-gcc-mt-1_65_1
+					boost_regex-gcc-mt-1_65_1
+					boost_serialization-gcc-mt-1_65_1
+					boost_signals-gcc-mt-1_65_1
+					boost_stacktrace_noop-gcc-mt-1_65_1
+					boost_stacktrace_addr2line-gcc-mt-1_65_1
+					boost_stacktrace_backtrace-gcc-mt-1_65_1
+					boost_stacktrace_basic-gcc-mt-1_65_1
+					boost_system-gcc-mt-1_65_1
+					boost_thread-gcc-mt-1_65_1
+					boost_timer-gcc-mt-1_65_1
+					boost_type_erasure-gcc-mt-1_65_1
+					boost_unit_test_framework-gcc-mt-1_65_1
+					boost_wave-gcc-mt-1_65_1
+					boost_wserialization-gcc-mt-1_65_1)
+endif()
 if(WIN32)
 add_definitions(-D__WINDOWS__)
 else()
