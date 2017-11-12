@@ -11,7 +11,8 @@ namespace KETTLE
 			m_Socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 			if (m_Socket == -1)
 				// print some thing
-				;
+			    ;
+
 		}
 		~TcpSocket() {}
 

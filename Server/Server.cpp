@@ -16,7 +16,6 @@
 #include<boost/timer.hpp>
 #include<boost/progress.hpp>
 using namespace KETTLE;
-
 int main()
 {
 	int32 a[] = {2,3,100,40,20,30,20,4004};
@@ -24,6 +23,7 @@ int main()
 	double64 c[] = { 564351313.12313,51312.84641854,464651231.1231645,84632123.2184651,231684.846123 };
 	int8* d[] = { "gwaefasfawe","2rfqwefasgaweg","fbaergaweg" ,"fbaegawfgasdf","bhwfgasefasfsd","fbaegasdas"};
 	CVarList var;
+
 	for (int32 i = 0; i < 1000; ++i)
 	{
 		int32 index = rand();
@@ -65,4 +65,3 @@ int main()
 	
     return 0;
 }
-
