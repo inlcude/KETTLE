@@ -10,6 +10,9 @@ public:
 #else
 	static void* threadfunc(void* arg);
 #endif
+
+private
+
 };
 
 #endif
