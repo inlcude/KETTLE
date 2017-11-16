@@ -15,7 +15,11 @@
 #include<boost/shared_ptr.hpp>
 #include<boost/timer.hpp>
 #include<boost/progress.hpp>
+#include<boost/date_time/gregorian/gregorian.hpp>
+#include<boost/date_time/posix_time/posix_time.hpp>
+#include<boost/smart_ptr.hpp>
 using namespace KETTLE;
+
 int main()
 {
 	int32 a[] = {2,3,100,40,20,30,20,4004};
@@ -24,6 +28,7 @@ int main()
 	int8* d[] = { "gwaefasfawe","2rfqwefasgaweg","fbaergaweg" ,"fbaegawfgasdf","bhwfgasefasfsd","fbaegasdas"};
 	CVarList var;
 
+	boost::progress_display pd(1000);
 	for (int32 i = 0; i < 1000; ++i)
 	{
 		int32 index = rand();
@@ -45,6 +50,7 @@ int main()
 		len = getArrayLen(d);
 		index = index % len;
 		var << d[index];
+		++pd;
 	}
 
 	boost::timer t;
@@ -55,13 +61,31 @@ int main()
 		boost::progress_timer t2;
 	}
 	
-	boost::shared_ptr<CVarList> ptr;
-	ptr.reset(&var);
-	printf("var size is %d\n", ptr->GetSize());
 	CVarList otherVar;
 	printf("before other var size is %d\n", otherVar.GetSize());
 	otherVar.Serialize(var.Serialize());
 	printf("after other var size is %d\n", otherVar.GetSize());
+
+	boost::gregorian::date d1;
+	boost::gregorian::date d2(2010, 1, 1);
+	boost::gregorian::date d3(2000, boost::gregorian::Jan, 1);
+	boost::gregorian::date d4(d2);
+
+	std::cout << boost::gregorian::to_simple_string(d2) << std::endl;
+
+	boost::posix_time::time_duration timd_d;
+	boost::posix_time::hours h(1);
+	boost::posix_time::minutes m(10);
+	boost::posix_time::seconds s(10);
+	boost::posix_time::millisec ms(1);
+	timd_d = h + m + s + ms;
+
+	boost::scoped_ptr<boost::gregorian::date> date_ptr;
+	boost::scoped_array<KETTLE::int32> PTR_ARRAY(new int(32));
+	boost::shared_ptr<KETTLE::int32> PTR_SHARE;
+	KETTLE::int32* pShare = new KETTLE::int32;
+	PTR_SHARE.reset(pShare);
+	printf("%d", PTR_SHARE.use_count());
 	
     return 0;
 }

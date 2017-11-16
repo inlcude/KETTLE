@@ -29,9 +29,9 @@ namespace KETTLE
 #endif
 	typedef float             float32;
 	typedef double            double64;
-#ifdef __LINUX__
-	typedef int32             HANDLE;
-#elif __WINDOWS__
+#ifdef __WINDOWS__
+	typedef THREAD_ID         HANDLE;
+#elif __LINUX__
 #endif
 
 }
