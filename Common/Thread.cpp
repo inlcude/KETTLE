@@ -10,10 +10,12 @@ unsigned __stdcall Thread::threadfunc(void* arg)
 	Thread* pTd = static_cast<Thread*>(arg);
 	pTd->SetThreadState(THREAD_STATE_INITIALIZED);
 	THREAD_STATE _ts; 
-	while(_ts = pTd->GetThreadState())
+	while(1)
 	{
-		if(ts == THREAD_STATE_STOP) break;
-		if(ts == THREAD_STATE_SLEEP) continue;
+		if(pTd->IsExit()) break;
+		if(pTd->)
+		{
+		}
 		if(ts != THREAD_STATE_RUN) continue;
 		
 		{
