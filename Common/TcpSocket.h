@@ -1,6 +1,6 @@
 #ifndef __TCP_SOCKET_H__
 #define __TCP_SOCKET_H__
-#include "Platform.h"
+#include "KETTLEPlatform.h"
 namespace KETTLE
 {
 	class TcpSocket

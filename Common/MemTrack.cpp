@@ -290,7 +290,7 @@ namespace MemTrack
 
     /* ---------------------------------------- TrackMalloc */
     
-    void *TrackMalloc(size_t size)
+    void* MemoryDumpInfo::TrackMalloc(size_t size)
     {
         // Allocate the memory, including space for the prolog.
         PrologChunk *pProlog = (PrologChunk *)malloc(SIZE_PrologChunk + size);
@@ -315,7 +315,7 @@ namespace MemTrack
 
     /* ---------------------------------------- TrackFree */
     
-    void TrackFree(void *p)
+    void MemoryDumpInfo::TrackFree(void *p)
     {
         // It's perfectly valid for "p" to be null; return if it is.
         if (p == NULL) return;
@@ -344,7 +344,7 @@ namespace MemTrack
 
     /* ---------------------------------------- TrackStamp */
 
-    void TrackStamp(void *p, const MemStamp &stamp, char const *typeName)
+    void MemoryDumpInfo::TrackStamp(void *p, const MemStamp &stamp, char const *typeName)
     {
         // Get the header and signature address for this pointer.
         UserChunk *pUser = reinterpret_cast<UserChunk *>(p);
@@ -361,7 +361,7 @@ namespace MemTrack
 
     /* ---------------------------------------- TrackDumpBlocks */
 
-    void TrackDumpBlocks()
+    void MemoryDumpInfo::TrackDumpBlocks()
     {
         // Get an array of pointers to all extant blocks.
         size_t numBlocks = BlockHeader::CountBlocks();
@@ -425,7 +425,7 @@ namespace MemTrack
 
     /* ---------------------------------------- TrackListMemoryUsage */
 
-    void TrackListMemoryUsage()
+    void MemoryDumpInfo::TrackListMemoryUsage()
     {
         // If there are no allocated blocks, then return now.
         size_t numBlocks = BlockHeader::CountBlocks();
@@ -536,7 +536,7 @@ namespace MemTrack
 
 void *operator new(size_t size)
 {
-    void *p = MemTrack::TrackMalloc(size);
+    void *p = MemTrack::MemoryDumpInfo::TrackMalloc(size);
     if (p == NULL) throw std::bad_alloc();
     return p;
 }
@@ -545,14 +545,14 @@ void *operator new(size_t size)
 
 void operator delete(void *p)
 {
-    MemTrack::TrackFree(p);
+    MemTrack::MemoryDumpInfo::TrackFree(p);
 }
 
 /* ---------------------------------------- operator new[] */
 
 void *operator new[](size_t size)
 {
-    void *p = MemTrack::TrackMalloc(size);
+    void *p = MemTrack::MemoryDumpInfo::TrackMalloc(size);
     if (p == NULL) throw std::bad_alloc();
     return p;
 }
@@ -561,5 +561,5 @@ void *operator new[](size_t size)
 
 void operator delete[](void *p)
 {
-    MemTrack::TrackFree(p);
+    MemTrack::MemoryDumpInfo::TrackFree(p);
 }

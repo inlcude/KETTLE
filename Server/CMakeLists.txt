@@ -1,16 +1,17 @@
 project(Server)
 include_directories(../Common)
 include_directories(../Extern/boost)
+aux_source_directory(../Common COMMON_SRC)
+aux_source_directory(../Extern/boost/boost BOOST_SRC)
 link_directories(../Extern/boost/lib)
-link_libraries(${boost_libraries})
+link_libraries(${BOOST_LIBRARIES})
 if(WIN32)
-link_libraries(${win_libraries})
+link_libraries(${WIN_LIBRARIES})
 endif()
-set(src_list
+set(SRC_LIST
     Server.cpp
-    stdafx.cpp
-	${common_src}
-	${boost_src})
+	${COMMON_SRC}
+	${BOOST_SRC})
 
-add_executable(Server ${src_list})
+add_executable(Server ${SRC_LIST})
 

@@ -20,22 +20,31 @@ namespace MemTrack
 
     /* ---------------------------------------- memory allocation and stamping prototypes */
 
-#ifdef __cplusplus
-	extern "C" {
-#endif
-		void *TrackMalloc(size_t size);
-		void TrackFree(void *p);
-		void TrackStamp(void *p, const MemStamp &stamp, char const *typeName);
-		void TrackDumpBlocks();
-		void TrackListMemoryUsage();
-#ifdef __cplusplus
-	}
-#endif
+	class MemoryDumpInfo
+	{
+	public:
+		static void *TrackMalloc(size_t size);
+		static void TrackFree(void *p);
+		static void TrackStamp(void *p, const MemStamp &stamp, char const *typeName);
+		static void TrackDumpBlocks();
+		static void TrackListMemoryUsage();
+	};
+//#ifdef __cplusplus
+//	extern "C" {
+//#endif
+//		void *TrackMalloc(size_t size);
+//		void TrackFree(void *p);
+//		void TrackStamp(void *p, const MemStamp &stamp, char const *typeName);
+//		void TrackDumpBlocks();
+//		void TrackListMemoryUsage();
+//#ifdef __cplusplus
+//	}
+//#endif
 		/* ---------------------------------------- operator * (MemStamp, ptr) */
 
 		template <class T> inline T *operator*(const MemStamp &stamp, T *p)
 		{
-			TrackStamp(p, stamp, typeid(T).name());
+			MemoryDumpInfo::TrackStamp(p, stamp, typeid(T).name());
 			return p;
 		}
 

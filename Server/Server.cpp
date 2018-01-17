@@ -3,13 +3,14 @@
 
 #include "stdafx.h"
 
-#include"Platform.h"
+#include"KETTLEPlatform.h"
 #include"SingltonTemplate.h"
 #include"TemplateDelegate.h"
 #include"TemplateFunctions.h"
 #include"TcpSocket.h"
 
 #include"VarList.h"
+#include"MemTrack.h"
 
 #include<iostream>
 #include<boost/shared_ptr.hpp>
@@ -23,7 +24,7 @@
 #include<boost/typeof/decltype.hpp>
 #include<boost/pool/singleton_pool.hpp>
 #include<boost/serialization/singleton.hpp>
-#include"MemTrack.h"
+
 using namespace KETTLE;
 
 int main()
@@ -58,8 +59,6 @@ int main()
 		var << d[index];
 		++pd;
 	}
-
-	//int* p = new int;
 
 	boost::timer t;
 	std::cout << "max timespane:" << t.elapsed_max() / 3600 << "h" << std::endl;
@@ -100,6 +99,12 @@ int main()
 	boost::optional<KETTLE::int32> A;
 	boost::serialization::singleton<boost::gregorian::date> ts;
 
+	MemTrack::MemoryDumpInfo::TrackDumpBlocks();
+	MemTrack::MemoryDumpInfo::TrackListMemoryUsage();
+	while (true)
+	{
+
+	}
 	auto anum = 3;
     return 0;
 }

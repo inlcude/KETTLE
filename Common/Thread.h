@@ -1,6 +1,8 @@
 #ifndef __THREAD_H__
 #define __THREAD_H__
-#include"Platform.h"
+
+#include"KETTLEPlatform.h"
+
 namespace KETTLE
 {
 	class ITask;
@@ -19,8 +21,9 @@ namespace KETTLE
 			THREAD_STATE_STOP,
 		};
 	public:
-		Thread():m_nThreadState(THREAD_STATE_UNINITIALIZED),THREAD_ID(0),m_bExitThread(false),_task(NULL)
+		Thread():m_nThreadState(THREAD_STATE_UNINITIALIZED),m_bExitThread(false),_task(NULL)
 		{
+			KETTLE::THREAD_ID(0);
 		}
 		virtual ~Thread()
 		{
@@ -45,15 +48,12 @@ namespace KETTLE
 		}
 		
 		void SetThreadState(THREAD_STATE nState);
-	private
-		THREAD_ID             m_nThreadID;
+	private:
+		KETTLE::THREAD_ID             m_nThreadID;
 		THREAD_STATE          m_nThreadState;
 		bool                  m_bExitThread;
 		ITask*                _task;
 	};
 	
-	class ThreadPool
-	{
-	}
 }
 #endif
