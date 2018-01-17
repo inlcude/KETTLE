@@ -18,6 +18,12 @@
 #include<boost/date_time/gregorian/gregorian.hpp>
 #include<boost/date_time/posix_time/posix_time.hpp>
 #include<boost/smart_ptr.hpp>
+#include<boost/optional.hpp>
+#include<boost/typeof/typeof.hpp>
+#include<boost/typeof/decltype.hpp>
+#include<boost/pool/singleton_pool.hpp>
+#include<boost/serialization/singleton.hpp>
+#include"MemTrack.h"
 using namespace KETTLE;
 
 int main()
@@ -53,6 +59,8 @@ int main()
 		++pd;
 	}
 
+	//int* p = new int;
+
 	boost::timer t;
 	std::cout << "max timespane:" << t.elapsed_max() / 3600 << "h" << std::endl;
 	std::cout << "min timespane" << t.elapsed_min() << "s" << std::endl;
@@ -86,6 +94,12 @@ int main()
 	KETTLE::int32* pShare = new KETTLE::int32;
 	PTR_SHARE.reset(pShare);
 	printf("%d", PTR_SHARE.use_count());
-	
+
+	BOOST_TYPEOF(2.0 * 3) x = 2.0 * 3;
+	BOOST_AUTO(y, 2 + 3);
+	boost::optional<KETTLE::int32> A;
+	boost::serialization::singleton<boost::gregorian::date> ts;
+
+	auto anum = 3;
     return 0;
 }

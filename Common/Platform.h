@@ -30,7 +30,7 @@ namespace KETTLE
 	typedef float             float32;
 	typedef double            double64;
 #ifdef __WINDOWS__
-	typedef THREAD_ID         HANDLE;
+	typedef HANDLE            THREAD_ID;
 #elif __LINUX__
 #endif
 
