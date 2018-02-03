@@ -37,8 +37,8 @@ set(BOOST_LIBRARIES boost_atomic-vc140-mt-1_65_1
 					boost_type_erasure-vc140-mt-1_65_1
 					boost_unit_test_framework-vc140-mt-1_65_1
 					boost_wave-vc140-mt-1_65_1
-					boost_wserialization-vc140-mt-1_65_1
-					libtcmalloc_minimal)
+					boost_wserialization-vc140-mt-1_65_1)
+set(GPERFTOOS_LIBRARIES libtcmalloc_minimal)
 else()
 
 set(BOOST_LIBRARIES boost_atomic-gcc-mt-1_65_1

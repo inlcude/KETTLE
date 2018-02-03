@@ -24,6 +24,8 @@
 #include<boost/typeof/decltype.hpp>
 #include<boost/pool/singleton_pool.hpp>
 #include<boost/serialization/singleton.hpp>
+#include<windows/config.h>
+#include<gperftools/profiler.h>
 
 using namespace KETTLE;
 
@@ -41,6 +43,7 @@ struct TestMemTrack
 };
 int main()
 {
+	ProfilerStart("test.prof");
 	int32 a[] = {2,3,100,40,20,30,20,4004};
 	float32 b[] = {1.4646,3.2341,3.45646453,4.13213,5.846456};
 	double64 c[] = { 564351313.12313,51312.84641854,464651231.1231645,84632123.2184651,231684.846123 };
@@ -119,5 +122,7 @@ int main()
 
 	}
 	auto anum = 3;
+
+	ProfilerStop();
     return 0;
 }
