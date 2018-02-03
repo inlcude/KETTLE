@@ -27,6 +27,18 @@
 
 using namespace KETTLE;
 
+struct TestMemTrack
+{
+	int     a;
+	float   b;
+	double  c;
+	TestMemTrack()
+	{
+		a = 1;
+		b = 2.0f;
+		c = 3.1;
+	}
+};
 int main()
 {
 	int32 a[] = {2,3,100,40,20,30,20,4004};
@@ -60,6 +72,7 @@ int main()
 		++pd;
 	}
 
+	TestMemTrack* pTestStruct = new TestMemTrack;
 	boost::timer t;
 	std::cout << "max timespane:" << t.elapsed_max() / 3600 << "h" << std::endl;
 	std::cout << "min timespane" << t.elapsed_min() << "s" << std::endl;
