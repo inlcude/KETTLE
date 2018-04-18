@@ -1,9 +1,7 @@
 cmake_minimum_required(VERSION 3.9.1)
-aux_source_directory(../Common common_src)
-aux_source_directory(../Extern/boost/boost boost_src)
-set(win_libraries ws2_32)
+set(WIN_LIBRARIES ws2_32)
 if(WIN32)
-set(boost_libraries boost_atomic-vc140-mt-1_65_1
+set(BOOST_LIBRARIES boost_atomic-vc140-mt-1_65_1
                     boost_chrono-vc140-mt-1_65_1
 					boost_container-vc140-mt-1_65_1
 					boost_context-vc140-mt-1_65_1
@@ -40,9 +38,10 @@ set(boost_libraries boost_atomic-vc140-mt-1_65_1
 					boost_unit_test_framework-vc140-mt-1_65_1
 					boost_wave-vc140-mt-1_65_1
 					boost_wserialization-vc140-mt-1_65_1)
+set(GPERFTOOS_LIBRARIES libtcmalloc_minimal)
 else()
 
-set(boost_libraries boost_atomic-gcc-mt-1_65_1
+set(BOOST_LIBRARIES boost_atomic-gcc-mt-1_65_1
                     boost_chrono-gcc-mt-1_65_1
 					boost_container-gcc-mt-1_65_1
 					boost_context-gcc-mt-1_65_1
@@ -78,7 +77,8 @@ set(boost_libraries boost_atomic-gcc-mt-1_65_1
 					boost_type_erasure-gcc-mt-1_65_1
 					boost_unit_test_framework-gcc-mt-1_65_1
 					boost_wave-gcc-mt-1_65_1
-					boost_wserialization-gcc-mt-1_65_1)
+					boost_wserialization-gcc-mt-1_65_1
+					libtcmalloc_minimal)				
 endif()
 if(WIN32)
 add_definitions(-D__WINDOWS__)

@@ -1,6 +1,6 @@
 #ifndef __THREAD_MUTEX_H__
 #define __THREAD_MUTEX_H__
-#include "Platform.h"
+#include "KETTLEPlatform.h"
 
 namespace KETTLE
 {

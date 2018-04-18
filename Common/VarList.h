@@ -1,7 +1,7 @@
 #ifndef __VAR_LIST_H__
 #define __VAR_LIST_H__
 
-#include "Platform.h"
+#include "KETTLEPlatform.h"
 
 using namespace KETTLE;
 namespace	KETTLE

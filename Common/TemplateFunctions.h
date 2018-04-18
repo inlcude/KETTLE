@@ -1,6 +1,6 @@
 #ifndef __TEMPLATE_FUNCTIONS_H__
 #define __TEMPLATE_FUNCTIONS_H__
-#include"Platform.h"
+#include"KETTLEPlatform.h"
 namespace KETTLE
 {
 	template <typename T>

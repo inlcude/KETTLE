@@ -2,16 +2,18 @@
 #define __PLATFORM_H__
 
 #include<string.h>
+
+#include "MemTrack.h"
+
 #ifdef __LINUX__
-#include<sys/types.h>
-#include<sys/socket.h>
-#include<netinet/in.h>
+	#include<sys/types.h>
+	#include<sys/socket.h>
+	#include<netinet/in.h>
 #elif __WINDOWS__
-#include<Winsock2.h>
-#include<windows.h>
-
+	#include<Winsock2.h>
+	#include<windows.h>
 #endif
-
+#pragma pack(push,1)
 namespace KETTLE
 {
 	typedef char              int8;
@@ -29,11 +31,11 @@ namespace KETTLE
 #endif
 	typedef float             float32;
 	typedef double            double64;
-#ifdef __LINUX__
-	typedef int32             HANDLE;
-#elif __WINDOWS__
+#ifdef __WINDOWS__
+	typedef HANDLE            THREAD_ID;
+#elif __LINUX__
 #endif
 
 }
-using namespace KETTLE;
+#pragma pack(pop)
 #endif
