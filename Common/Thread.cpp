@@ -18,7 +18,7 @@ unsigned __stdcall Thread::threadfunc(void* arg)
 }
 #else
 void* Thread::threadfunc(void* arg)
-{
+
 }
 #endif
 
