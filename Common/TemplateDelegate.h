@@ -67,8 +67,7 @@ namespace KETTLE
 		void Invoke(U* a)
 		{
 			typename listpool::iterator iter = m_Pool.begin();
-			for (;iter != m_Pool.end();++iter)
-				(*iter)->Invoke(a);
+			for (;iter != m_Pool.end();++iter) (*iter)->Invoke(a);
 		}
 	private:
 		typedef std::list<IDelegate<U>*>      listpool;

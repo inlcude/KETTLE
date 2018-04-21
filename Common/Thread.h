@@ -13,17 +13,16 @@ namespace KETTLE
 	public:
 		enum THREAD_STATE
 		{
-			THREAD_STATE_UNINITIALIZED = 0,
-			THREAD_STATE_INITIALIZED,
-			THREAD_STATE_RUN,
-			THREAD_STATE_SLEEP,
-			THREAD_STATE_BUSY,
-			THREAD_STATE_STOP,
+			THREAD_STATE_UNINITIALIZED = 0,            // 线程未初始化
+			THREAD_STATE_INITIALIZED,                  // 线程初始化，但未运行
+			THREAD_STATE_RUN,                          // 线程正在运行
+			THREAD_STATE_SLEEP,                        // 线程正在挂起
+			THREAD_STATE_BUSY,                         // 线程正在忙碌
+			THREAD_STATE_STOP,                         // 线程停止工作
 		};
 	public:
-		Thread():m_nThreadState(THREAD_STATE_UNINITIALIZED),m_bExitThread(false),_task(NULL)
+		Thread():m_nThreadState(THREAD_STATE_UNINITIALIZED),m_bExitThread(false),_task(NULL), m_nThreadHandle(0), m_nThreadId(0)
 		{
-			KETTLE::THREAD_ID(0);
 		}
 		virtual ~Thread()
 		{
@@ -34,13 +33,12 @@ namespace KETTLE
 		static void* threadfunc(void* arg);
 	#endif
 		bool CreateThread();
+		THREAD_STATE GetThreadState() const;
 		THREAD_STATE GetThreadState();
 		
 		void NotifyThreadExit();
-		bool IsExit();
-		
 		void NotifyThreadSleep();
-		bool IsSleep();
+		void NotifyThreadRun();
 	protected:
 		bool IsThreadExit()
 		{
@@ -48,8 +46,11 @@ namespace KETTLE
 		}
 		
 		void SetThreadState(THREAD_STATE nState);
+		unsigned ThreadFunc();
+
 	private:
-		KETTLE::THREAD_ID             m_nThreadID;
+		KETTLE::THREAD_HANDLE     m_nThreadHandle;
+		THREAD_ID                 m_nThreadId;
 		THREAD_STATE          m_nThreadState;
 		bool                  m_bExitThread;
 		ITask*                _task;

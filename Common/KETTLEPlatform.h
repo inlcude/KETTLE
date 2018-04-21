@@ -2,6 +2,7 @@
 #define __PLATFORM_H__
 
 #include<string.h>
+#include<iostream>
 
 #include "MemTrack.h"
 
@@ -12,6 +13,7 @@
 #elif __WINDOWS__
 	#include<Winsock2.h>
 	#include<windows.h>
+	#include<process.h>
 #endif
 #pragma pack(push,1)
 namespace KETTLE
@@ -32,9 +34,10 @@ namespace KETTLE
 	typedef float             float32;
 	typedef double            double64;
 #ifdef __WINDOWS__
-	typedef HANDLE            THREAD_ID;
+	typedef HANDLE            THREAD_HANDLE;
 #elif __LINUX__
 #endif
+	typedef uint32            THREAD_ID;
 
 }
 #pragma pack(pop)
