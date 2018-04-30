@@ -9,6 +9,7 @@
 #include"TemplateFunctions.h"
 #include"TcpSocket.h"
 
+
 #include"VarList.h"
 #include"MemTrack.h"
 #include"Thread.h"
@@ -40,14 +41,31 @@ struct TestMemTrack
 		c = 3.1;
 	}
 };
+
+class CallBackParam
+{
+public:
+private:
+	int a;
+};
+
+class TestClass
+{
+public:
+	void TestFunction(CallBackParam* param)
+	{
+		std::cout << "call back" << std::endl;
+	}
+};
+
 int main()
 {
-	KETTLE::Thread thread;
-	thread.CreateThread();
+	EventPool<CallBackParam> pool;
+	TestClass testclass;
+	CallBackParam param;
+	pool.Attach(&testclass, &(TestClass::TestFunction));
 
-	while (1)
-	{
-		;
-	}
-    return 0;
+	pool.Invoke(&param);
+
+	return 0;
 }
