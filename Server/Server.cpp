@@ -85,7 +85,5 @@ int main()
 	event_pool.Invoke(&param);
 	event_pool.Detach(&test_cls, &TestCallBack::cb_func);
 
-
-
 	return 0;
 }

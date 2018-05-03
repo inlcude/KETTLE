@@ -14,13 +14,13 @@ namespace KETTLE
 	};
 
 	template<typename T, typename U>
-	class Delegate : public IDelegate<U>
+	class Delegate final: public IDelegate<U>
 	{
 	public:
 		Delegate(T* _instance, void (T::*Functions)(U*)) : m_Instance(_instance), m_pFun(Functions) {}
 
 		virtual ~Delegate() {}
-		virtual void Invoke(U* a) override
+		virtual void Invoke(U* a) override final
 		{
 			(m_Instance->*m_pFun)(a);
 		}
@@ -56,7 +56,7 @@ namespace KETTLE
 		{
 #if __cplusplus >= 201103L
 
-			m_Pool.erase(std::remove_if(m_Pool.begin(),
+			m_Pool.erase(m_Pool.remoe_if(m_Pool.begin(),
 				m_Pool.end(),
 				[_instance, Funtions](IDelegate<U>* lst_obj) {
 				Delegate<T, U>* obj = dynamic_cast<Delegate<T, U>*>(lst_obj);
