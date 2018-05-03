@@ -27,51 +27,65 @@
 #include<boost/pool/singleton_pool.hpp>
 #include<boost/serialization/singleton.hpp>
 
-using namespace KETTLE;
+#include<map>
+#include<string>
 
-<<<<<<< HEAD
-int main()
+using namespace KETTLE;
+using namespace std;
+
+struct Base
 {
-    return 0;
-=======
-struct TestMemTrack
-{
-	int     a;
-	float   b;
-	double  c;
-	TestMemTrack()
-	{
-		a = 1;
-		b = 2.0f;
-		c = 3.1;
-	}
+	virtual void vfunc(float) {}
 };
 
+struct Derived : public Base
+{
+	virtual void vfunc(int)  {}
+	virtual void vfunc(float) override {}
+};
 class CallBackParam
 {
 public:
+	CallBackParam()
+	{
+
+	}
 private:
-	int a;
+	int         m_a;
+	int         m_b;
 };
 
-class TestClass
+class CallBackParamChild : public CallBackParam
 {
 public:
-	void TestFunction(CallBackParam* param)
+	CallBackParamChild()
 	{
-		std::cout << "call back" << std::endl;
+
 	}
 };
 
+class TestCallBack
+{
+public:
+	void cb_func(CallBackParam*) { cout << "call back" << endl; }
+};
+template<typename T1,typename T2>
+auto add(T1 x, T2 y)->decltype(x + y);
+
 int main()
 {
-	EventPool<CallBackParam> pool;
-	TestClass testclass;
+	std::cout << __cplusplus << std::endl;
+	EventPool<CallBackParam>      event_pool;
+	TestCallBack test_cls;
+	event_pool.Attach(&test_cls, &TestCallBack::cb_func);
 	CallBackParam param;
-	pool.Attach(&testclass, &(TestClass::TestFunction));
 
-	pool.Invoke(&param);
+	CallBackParam* pParam = new CallBackParamChild();
+
+	event_pool.Invoke(&param);
+	event_pool.Detach(&test_cls, &TestCallBack::cb_func);
+
+
 
 	return 0;
->>>>>>> 841c71bb2a4c2290117b728234b72ab896190653
 }
