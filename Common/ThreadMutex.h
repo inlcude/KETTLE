@@ -4,7 +4,13 @@
 
 namespace KETTLE
 {
-	class ThreadMutex
+	class ILock
+	{
+	public:
+		virtual bool Lock() = 0;
+		virtual bool Unlock() = 0;
+	};
+	class ThreadMutex : public ILock
 	{
 	public:
 		ThreadMutex() {
@@ -15,12 +21,17 @@ namespace KETTLE
 #endif
 		}
 
-		bool Wait()
+		virtual bool Lock()
 		{
 #if __WINDOWS__
 			WaitForSingleObject(m_Handle, INFINITE);
 #elif __LINUX__
 #endif
+			return true;
+		}
+
+		virtual bool UnLock()
+		{
 			return true;
 		}
 		~ThreadMutex()
@@ -32,6 +43,30 @@ namespace KETTLE
 		}
 	private:
 		HANDLE           m_Handle;
+	};
+
+	class AutoLock
+	{
+	public:
+		AutoLock(ILock* pLock) : m_pLock(pLock) {
+			m_pLock->Lock();
+		}
+
+		~AutoLock()
+		{
+			m_pLock->Unlock();
+		}
+		//virtual bool Lock()
+		//{
+		//	return m_pLock->Lock();
+		//}
+		//virtual bool Unlock()
+		//{
+		//	return m_pLock->Unlock();
+		//}
+	private:
+		ILock*              m_pLock;
+		
 	};
 }
 

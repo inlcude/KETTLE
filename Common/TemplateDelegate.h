@@ -54,21 +54,22 @@ namespace KETTLE
 		void Detach(T* _instance, void (T::*Funtions)(U*))
 		{
 			typename listpool::iterator iter = m_Pool.begin();
-			for (;iter != m_Pool.end();++iter)
+			for (;iter != m_Pool.end();)
 			{
 				if ((*iter)->GetClassObj() == _instance && *iter->GetClsFunc() == Funtions)
 				{
 					SAFE_DELETE_PTR(*iter);
 					iter = m_Pool.erase(iter);
 				}
+				else ++iter;
 			}
 		}
 
 		void Invoke(U* a)
 		{
-			typename listpool::iterator iter = m_Pool.begin();
-			for (;iter != m_Pool.end();++iter)
-				(*iter)->Invoke(a);
+			for (const auto& iter : m_Pool) (*iter).Invoke(a);
+			//typename listpool::iterator iter = m_Pool.begin();
+			//for (;iter != m_Pool.end();++iter) (*iter)->Invoke(a);
 		}
 	private:
 		typedef std::list<IDelegate<U>*>      listpool;

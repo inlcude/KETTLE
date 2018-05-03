@@ -9,9 +9,8 @@ namespace KETTLE
 		TcpSocket(void)
 		{
 			m_Socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-			if (m_Socket == -1)
+			if (m_Socket == -1) std::cout << "error";
 				// print some thing
-			    ;
 
 		}
 		~TcpSocket() {}
