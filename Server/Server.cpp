@@ -74,20 +74,48 @@ public:
 template<typename T1,typename T2>
 auto add(T1 x, T2 y)->decltype(x + y);
 
+__int64 sqrt(__int64 n) { return n * n; }
+
+__int64 pow2(int n)
+{
+	if (n > 0) return n&1 ? sqrt(pow2(n >> 1)) << 1: sqrt(pow2(n >> 1));
+	else return 1;
+}
+
+__int64 pow2_1(int n)
+{
+	__int64 nvalue = 1;
+	while (n--) nvalue <<= 1;
+	return nvalue;
+}
+
+
 int main()
 {
 	{
+		//boost::timer::auto_cpu_timer t;
+		////std::cout << __cplusplus << std::endl;
+		//EventPool<CallBackParam>      event_pool;
+		//TestCallBack test_cls;
+		//event_pool.Attach(&test_cls, &TestCallBack::cb_func);
+		//CallBackParam param;
+
+		//CallBackParam* pParam = new CallBackParamChild();
+
+		//event_pool.Invoke(&param);
+		//event_pool.Detach(&test_cls, &TestCallBack::cb_func);
+	}
+
+	{
+		std::cout << "pow2:" << std::endl;
 		boost::timer::auto_cpu_timer t;
-		//std::cout << __cplusplus << std::endl;
-		EventPool<CallBackParam>      event_pool;
-		TestCallBack test_cls;
-		event_pool.Attach(&test_cls, &TestCallBack::cb_func);
-		CallBackParam param;
+		std::cout << pow2(50) << std::endl;
+	}
 
-		CallBackParam* pParam = new CallBackParamChild();
-
-		event_pool.Invoke(&param);
-		event_pool.Detach(&test_cls, &TestCallBack::cb_func);
+	{
+		std::cout << "pow2_1:" << std::endl;
+		boost::timer::auto_cpu_timer t;
+		std::cout << pow2_1(50) << std::endl;
 	}
 	
 	return 0;
