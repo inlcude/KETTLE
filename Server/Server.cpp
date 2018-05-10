@@ -27,9 +27,11 @@
 //#include<boost/typeof/decltype.hpp>
 //#include<boost/pool/singleton_pool.hpp>
 //#include<boost/serialization/singleton.hpp>
+#include<boost/flyweight/flyweight.hpp>
 
 
 #include<map>
+#include<vector>
 #include<string>
 
 using namespace KETTLE;
@@ -89,7 +91,19 @@ __int64 pow2_1(int n)
 	return nvalue;
 }
 
-
+class TestDelete
+{
+public:
+	TestDelete()
+	{
+		CallBackParamChild* p = new CallBackParamChild;
+		p->~CallBackParamChild();
+	}
+	~TestDelete()
+	{
+		CallBackParamChild t;
+	}
+};
 int main()
 {
 	{
@@ -117,6 +131,18 @@ int main()
 		boost::timer::auto_cpu_timer t;
 		std::cout << pow2_1(50) << std::endl;
 	}
+
+
+	//std::vector<boost::flyweight<std::string>> dir;
+
+	//char tmp[10];
+	//memset(tmp, 0, sizeof(tmp));
+	//for (int i = 0; i < 100000;++i)
+	//{
+	//	sprintf(tmp, "in%d", i % 100);
+	//	dir.push_back(boost::flyweight<std::string>(tmp));
+	//}
+
 	
 	return 0;
 }
