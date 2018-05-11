@@ -104,6 +104,72 @@ public:
 		CallBackParamChild t;
 	}
 };
+
+namespace binary_search
+{
+	int binary_search(const vector<int>& array, int& lo,int& hi,int nvalue)
+	{
+		if(lo < hi)
+		{
+			int mid = (lo + hi) >> 1;
+			(array[mid] <= nvalue) ? lo = mid + 1 : hi = mid;
+			binary_search(array, lo, hi, nvalue);
+		}
+
+		return hi - 1;
+	}
+
+	void test_binary_search()
+	{
+		std::cout << "begin binary search" << std::endl;
+		std::vector<int> test_array;
+		for (int i = 0; i < 100;++i) test_array.push_back(rand());
+
+		std::sort(test_array.begin(), test_array.end());
+
+		int n = rand();
+		int lo = 0;
+		int hi = test_array.size();
+		for (auto i : test_array) std::cout << i << std::endl;
+		int nPos = binary_search(test_array, lo, hi, n);
+		std::cout << "value = " << n << ", pos = " << nPos << endl;
+	}
+}
+
+namespace mergesort
+{
+	void sort(std::vector<int>& array,int lo,int hi,int mid)
+	{
+		int lo_len = mid - lo;
+		int hi_len = hi - mid;
+
+		int* A = new int[lo_len];
+
+		for (int i = 0; i < lo_len;++i) A[i] = array[lo + i];
+		for (int i = 0, j = 0,k = 0; (i < lo_len || j < hi_len);)
+		{
+			if (A[i] <= array[mid + j]) array[lo + k++] = A[i++];
+			else array[lo + k++] = array[mid + j++];
+		}
+
+		delete[] A;
+	}
+
+	void mergsort(std::vector<int>& array,int lo,int hi)
+	{
+		if (hi - lo < 2) return;
+		int mi = (lo + hi) >> 2;
+		mergsort(array, lo, mi);
+		mergsort(array, mi, hi);
+
+		sort(array, lo, hi, mi);
+	}
+
+	void test_mergesort()
+	{
+
+	}
+}
 int main()
 {
 	{
@@ -142,6 +208,10 @@ int main()
 	//	sprintf(tmp, "in%d", i % 100);
 	//	dir.push_back(boost::flyweight<std::string>(tmp));
 	//}
+
+	{
+		binary_search::test_binary_search();
+	}
 
 	
 	return 0;
