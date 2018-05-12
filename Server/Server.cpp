@@ -15,17 +15,19 @@
 #include"Thread.h"
 
 #include<iostream>
-#include<boost/shared_ptr.hpp>
-#include<boost/timer.hpp>
-#include<boost/progress.hpp>
-#include<boost/date_time/gregorian/gregorian.hpp>
-#include<boost/date_time/posix_time/posix_time.hpp>
-#include<boost/smart_ptr.hpp>
-#include<boost/optional.hpp>
-#include<boost/typeof/typeof.hpp>
-#include<boost/typeof/decltype.hpp>
-#include<boost/pool/singleton_pool.hpp>
-#include<boost/serialization/singleton.hpp>
+#include<boost/timer/timer.hpp>
+//#include<boost/shared_ptr.hpp>
+//#include<boost/timer.hpp>
+//#include<boost/progress.hpp>
+//#include<boost/date_time/gregorian/gregorian.hpp>
+//#include<boost/date_time/posix_time/posix_time.hpp>
+//#include<boost/smart_ptr.hpp>
+//#include<boost/optional.hpp>
+//#include<boost/typeof/typeof.hpp>
+//#include<boost/typeof/decltype.hpp>
+//#include<boost/pool/singleton_pool.hpp>
+//#include<boost/serialization/singleton.hpp>
+#include<math.h>
 
 #include<map>
 #include<string>
@@ -84,6 +86,8 @@ int main()
 
 	event_pool.Invoke(&param);
 	event_pool.Detach(&test_cls, &TestCallBack::cb_func);
+
+	boost::timer::auto_cpu_timer t;
 
 	return 0;
 }
