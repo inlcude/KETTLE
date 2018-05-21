@@ -8,8 +8,8 @@
 
 #ifdef __LINUX__
 	#include<sys/types.h>
-	#include<sys/socket.h>
-	#include<netinet/in.h>
+	#include<sys/bsdtypes.h>
+	//#include<netinet/in.h>
 #elif __WINDOWS__
 	#include<Winsock2.h>
 	#include<windows.h>
@@ -36,6 +36,7 @@ namespace KETTLE
 #ifdef __WINDOWS__
 	typedef HANDLE            THREAD_HANDLE;
 #elif __LINUX__
+	typedef int32             THREAD_HANDLE;
 #endif
 	typedef uint32            THREAD_ID;
 
