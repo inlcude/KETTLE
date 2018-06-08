@@ -33,6 +33,7 @@
 #include<map>
 #include<vector>
 #include<string>
+#include<atomic>
 
 using namespace KETTLE;
 using namespace std;
