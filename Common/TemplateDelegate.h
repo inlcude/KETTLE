@@ -11,6 +11,7 @@ namespace KETTLE
 	{
 	public:
 		virtual void Invoke(T* param) = 0;
+		virtual ~IDelegate() {}
 	};
 
 	template<typename T, typename U>
@@ -19,7 +20,6 @@ namespace KETTLE
 	public:
 		Delegate(T* _instance, void (T::*Functions)(U*)) : m_Instance(_instance), m_pFun(Functions) {}
 
-		virtual ~Delegate() {}
 		virtual void Invoke(U* a) override final
 		{
 			(m_Instance->*m_pFun)(a);
