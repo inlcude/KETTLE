@@ -54,16 +54,16 @@ namespace KETTLE
 		template<typename T>
 		void Detach(T* _instance, void (T::*Funtions)(U*))
 		{
-#if __cplusplus >= 201103L
-
-			m_Pool.erase(m_Pool.remoe_if(m_Pool.begin(),
-				m_Pool.end(),
-				[_instance, Funtions](IDelegate<U>* lst_obj) {
-				Delegate<T, U>* obj = dynamic_cast<Delegate<T, U>*>(lst_obj);
-				if (!obj) return false;
-				return obj->GetClassObj() == _instance && obj->GetClsFunc() == Funtions;}
-			));
-#else
+//#if __cplusplus >= 201103L
+//
+//			m_Pool.erase(m_Pool.remove_if(m_Pool.begin(),
+//				m_Pool.end(),
+//				[_instance, Funtions](IDelegate<U>* lst_obj) {
+//				Delegate<T, U>* obj = dynamic_cast<Delegate<T, U>*>(lst_obj);
+//				if (!obj) return false;
+//				return obj->GetClassObj() == _instance && obj->GetClsFunc() == Funtions;}
+//			));
+//#else
 			typename listpool::iterator iter = m_Pool.begin();
 			for (;iter != m_Pool.end();)
 			{
@@ -75,7 +75,7 @@ namespace KETTLE
 				}
 				else ++iter;
 			}
-#endif	
+//#endif	
 		}
 
 		void Invoke(U* a)
