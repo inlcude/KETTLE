@@ -19,7 +19,7 @@
 //#include<boost/shared_ptr.hpp>
 //#include<boost/timer.hpp>
 //#include<iostream>
-//#include<boost/shared_ptr.hpp>
+#include<boost/shared_ptr.hpp>
 //#include<boost/timer.hpp>
 #include<boost/timer/timer.hpp>
 //#include<boost/progress.hpp>
@@ -44,5 +44,6 @@ using namespace std;
 
 int main()
 {
+    boost::shared_ptr<int> a;
 	return 0;
 }
