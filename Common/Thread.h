@@ -1,7 +1,10 @@
 #ifndef __THREAD_H__
 #define __THREAD_H__
 
+#include<list>
+
 #include"KETTLEPlatform.h"
+#include"ThreadMutex.h"
 
 namespace KETTLE
 {
@@ -21,7 +24,7 @@ namespace KETTLE
 			THREAD_STATE_STOP,                         // 线程停止工作
 		};
 	public:
-		Thread():m_nThreadState(THREAD_STATE_UNINITIALIZED),m_bExitThread(false),_task(NULL), m_nThreadHandle(0), m_nThreadId(0)
+		Thread():m_nThreadState(THREAD_STATE_UNINITIALIZED),m_bExitThread(false), m_nThreadHandle(0), m_nThreadId(0)
 		{
 		}
 		virtual ~Thread()
@@ -35,10 +38,8 @@ namespace KETTLE
 		bool CreateThread();
 		THREAD_STATE GetThreadState() const;
 		THREAD_STATE GetThreadState();
-		
-		void NotifyThreadExit();
-		void NotifyThreadSleep();
-		void NotifyThreadRun();
+
+        bool AddTask(ITask* task);
 	protected:
 		bool IsThreadExit()
 		{
@@ -48,12 +49,19 @@ namespace KETTLE
 		void SetThreadState(THREAD_STATE nState);
 		unsigned ThreadFunc();
 
+        void NotifyThreadExit();
+        void NotifyThreadSleep();
+        void NotifyThreadRun();
+
 	private:
 		KETTLE::THREAD_HANDLE     m_nThreadHandle;
 		THREAD_ID                 m_nThreadId;
-		THREAD_STATE          m_nThreadState;
-		bool                  m_bExitThread;
-		ITask*                _task;
+		THREAD_STATE              m_nThreadState;
+		bool                      m_bExitThread;
+		std::list<ITask*>         m_TaskList;
+        ThreadMutex               m_TaskListMutex;
+
+        typedef::std::list<const ITask*>::const_iterator TASK_CONST_ITR;
 	};
 	
 }

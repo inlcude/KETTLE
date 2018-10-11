@@ -3,11 +3,20 @@
 #include"KETTLEPlatform.h"
 namespace KETTLE
 {
-	template <typename T>
-	KETTLE::int32 getArrayLen(T& array)
-	{
-		return (sizeof(array) / sizeof(array[0]));
-	}
+    class CommonFunction
+    {
+    public:
+        template <typename T>
+        static KETTLE::int32 getArrayLen(T& array)
+        {
+            return (sizeof(array) / sizeof(array[0]));
+        }
+
+        static void FunctionSleep(int milsec);
+    };
+
+
+
 }
 
 #endif

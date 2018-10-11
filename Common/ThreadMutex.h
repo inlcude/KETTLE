@@ -7,63 +7,68 @@ namespace KETTLE
 	class ILock
 	{
 	public:
+        virtual ~ILock() {}
 		virtual bool Lock() = 0;
-		virtual bool Unlock() = 0;
+		virtual bool UnLock() = 0;
 	};
-	class ThreadMutex : public ILock
+
+	class ThreadMutex final : public ILock
 	{
 	public:
 		ThreadMutex() {
 #if __WINDOWS__
-			m_Handle = CreateMutex(NULL, false, NULL);
+            // ¼¤·¢Ì¬»¥³âÆ÷
+			m_HandleMutex = CreateMutex(NULL, false, NULL);
 #elif __LINUX__
 
 #endif
 		}
 
-		virtual bool Lock()
+		virtual bool Lock() override final
 		{
 #if __WINDOWS__
-			WaitForSingleObject(m_Handle, INFINITE);
+			DWORD return_code = WaitForSingleObject(m_HandleMutex, INFINITE);
+            // wait handle active, WAIT_OBJECT_0 is success
+            if (WAIT_OBJECT_0 != return_code) return false;
 #elif __LINUX__
 #endif
 			return true;
 		}
 
-		virtual bool UnLock()
+		virtual bool UnLock() override final
 		{
+#if __WINDOWS__
+            ReleaseMutex(m_HandleMutex);
+#elif __LINUX__
+#endif
 			return true;
 		}
 		~ThreadMutex()
 		{
 #if __WINDOWS__
-			CloseHandle(m_Handle);
+			CloseHandle(m_HandleMutex);
 #elif __LINUX__
 #endif
 		}
 	private:
-		HANDLE           m_Handle;
+#if __WINDOWS__
+		HANDLE           m_HandleMutex;
+#elif __LINUX__
+#endif
 	};
+
 
 	class AutoLock
 	{
 	public:
-		AutoLock(ILock* pLock) : m_pLock(pLock) {
+        AutoLock(ILock* pLock) : m_pLock(pLock) {
 			m_pLock->Lock();
 		}
 
 		~AutoLock()
 		{
-			m_pLock->Unlock();
+			m_pLock->UnLock();
 		}
-		//virtual bool Lock()
-		//{
-		//	return m_pLock->Lock();
-		//}
-		//virtual bool Unlock()
-		//{
-		//	return m_pLock->Unlock();
-		//}
 	private:
 		ILock*              m_pLock;
 		

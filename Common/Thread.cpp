@@ -1,15 +1,17 @@
 #include"Thread.h"
 #include"ThreadTask.h"
+#include"TemplateFunctions.h"
 
 
 bool KETTLE::Thread::CreateThread()
 {
 #ifdef __WINDOWS__
+    // 创建但是不运行,先挂起
 	m_nThreadHandle = (HANDLE)_beginthreadex(NULL,
 		0,
 		&(KETTLE::Thread::threadfunc),
 		(void*)this,
-		0,
+		CREATE_SUSPENDED,
 		&m_nThreadId);
 
 	m_nThreadState = THREAD_STATE_INITIALIZED;
@@ -37,8 +39,22 @@ unsigned KETTLE::Thread::ThreadFunc()
 	{
 		if (m_nThreadState == THREAD_STATE_RUN)
 		{
+            AutoLock lock(&m_TaskListMutex);
+            if (m_TaskList.empty())
+            {
+                CommonFunction::FunctionSleep(10);
+                continue;
+            }
+
 			m_nThreadState = THREAD_STATE_BUSY;
-			//_task->Run(NULL);
+            for (auto& iter : m_TaskList)
+            {
+                iter->Run(NULL);
+                iter->SetStatues(TASKSTATUES_FINISHED);
+            }
+
+            m_TaskList.clear();
+            m_nThreadState = THREAD_STATE_RUN;
 		}
 		;//;if(_task) _task->
 	}
@@ -64,7 +80,18 @@ void KETTLE::Thread::NotifyThreadExit()
 
 void KETTLE::Thread::NotifyThreadSleep()
 {
+#if __WINDOWS__
+    if(SuspendThread(m_nThreadHandle)) m_nThreadState = THREAD_STATE_SLEEP;
+#elif __LINUX__
+#endif
+}
 
+void KETTLE::Thread::NotifyThreadRun()
+{
+#if __WINDOWS__
+    if (ResumeThread(m_nThreadHandle)) m_nThreadState = THREAD_STATE_RUN;
+#elif __LINUX__
+#endif
 }
 
 void KETTLE::Thread::SetThreadState(KETTLE::Thread::THREAD_STATE nState)
@@ -72,3 +99,11 @@ void KETTLE::Thread::SetThreadState(KETTLE::Thread::THREAD_STATE nState)
 	m_nThreadState = nState;
 }
 
+bool KETTLE::Thread::AddTask(ITask* task)
+{
+    if (!task) return false;
+    AutoLock autolock(&m_TaskListMutex);
+
+    m_TaskList.push_back(task);
+    return true;
+}
