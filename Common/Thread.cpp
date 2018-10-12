@@ -39,6 +39,9 @@ unsigned KETTLE::Thread::ThreadFunc()
 	{
 		if (m_nThreadState == THREAD_STATE_RUN)
 		{
+            // thread exit();
+            if (m_nThreadState == THREAD_STATE_STOP) break;
+
             AutoLock lock(&m_TaskListMutex);
             if (m_TaskList.empty())
             {
@@ -56,7 +59,6 @@ unsigned KETTLE::Thread::ThreadFunc()
             m_TaskList.clear();
             m_nThreadState = THREAD_STATE_RUN;
 		}
-		;//;if(_task) _task->
 	}
 
 	std::cout << "Thread end" << std::endl;
@@ -75,7 +77,7 @@ KETTLE::Thread::THREAD_STATE KETTLE::Thread::GetThreadState()
 
 void KETTLE::Thread::NotifyThreadExit()
 {
-
+    m_nThreadState = THREAD_STATE_STOP;
 }
 
 void KETTLE::Thread::NotifyThreadSleep()
