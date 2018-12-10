@@ -17,7 +17,7 @@ namespace KETTLE
 	public:
 		ThreadMutex() {
 #if __WINDOWS__
-            // ¼¤·¢Ì¬»¥³âÆ÷
+            // ï¿½ï¿½ï¿½ï¿½Ì¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			m_HandleMutex = CreateMutex(NULL, false, NULL);
 #elif __LINUX__
 
@@ -55,6 +55,19 @@ namespace KETTLE
 		HANDLE           m_HandleMutex;
 #elif __LINUX__
 #endif
+	};
+
+	class ProcessMutex final : public ILock
+	{
+		public:
+			ProcessMutex(const char* lock_name);
+		public:
+			virtual bool Lock() override final;
+			virtual bool UnLock() override final;
+		private:
+			#ifdef __LINUX__
+				pthread_mutex_t* mutex; 
+			#endif
 	};
 
 

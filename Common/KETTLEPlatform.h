@@ -9,6 +9,32 @@
 #ifdef __LINUX__
 	#include<sys/types.h>
 	#include<sys/bsdtypes.h>
+	#include<arpa/inet.h>
+	#include<netinet/in_systm.h>
+	#include<netinet/ip.h>
+	#include<netinet/ip_icmp.h>
+	#include<pthread.h>
+	#include<errno.h>
+	#include<sys/time.h>
+	#include<sys/mman.h>
+	#include<sys/types.h>
+	#include<stdlib.h>
+	#include<stddef.h>
+	#include<string.h>
+	#include<unistd.h>
+	#include<signal.h>
+	#include<stdio.h>
+	#include<sys/stat.h>
+	#include<fcntl.h>
+	#include<sys/wait.h>
+	#include<aio.h>
+	#include<ctype.h>
+	#include<sys/socket.h>
+	#include<netdb.h>
+	#include<sys/un.h>
+	#include<time.h>
+	#include<stddef.h>
+	#include<pthread.h>
 	//#include<netinet/in.h>
 #elif __WINDOWS__
 	#include<Winsock2.h>
