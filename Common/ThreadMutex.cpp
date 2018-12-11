@@ -1,12 +1,17 @@
 #include"stdafx.h"
 #include"ThreadMutex.h"
+#include"Log.h"
 
-ProcessMutex::ProcessMutex(const char* lock_name)
-#ifdef __LINUX__
-:mutex(nullptr)
-#endif
+////////////////////////////////////////////////////////////////
+KETTLE::ThreadMutex::ThreadMutex():mutex(PTHREAD_MUTEX_INITIALIZER){
+}
+
+KETTLE::ThreadMutex::~ThreadMutex(){
+    pthread_mutex_destroy(&mutex);
+}
+/////////////////////////////////////////////////////////////////
+KETTLE::ProcessMutex::ProcessMutex(const char* lock_name) : mutex(nullptr)
 {
-#ifdef __LINUX__
 	int fd = open(lock_name,O_RDWR | O_CREAT | O_EXCL,S_IRUSR|S_IWUSR|S_IROTH);
 	if(fd < 0){
 		fd = open(lock_name,O_RDWR);
@@ -38,11 +43,9 @@ ProcessMutex::ProcessMutex(const char* lock_name)
 		if((pthread_err = pthread_mutexattr_destroy(&attr)) != 0)
 			err_exit(pthread_err,"pthread mutex destroy failed");
 	}
-#endif
 }
 
-bool ProcessMutex::Lock(){
-#ifdef __LINUX__
+bool KETTLE::ProcessMutex::Lock(){
     int pthread_err = 0;
 	if((pthread_err = pthread_mutex_lock(mutex)) != 0)
 	{
@@ -52,15 +55,21 @@ bool ProcessMutex::Lock(){
 		    err_exit(pthread_err,"mutex consisten error");
         return false;
 	}
-#endif
     return true;
 }
 
-bool ProcessMutex::UnLock() {
-#ifdef __LINUX__
+bool KETTLE::ProcessMutex::UnLock() {
 	int pthread_err = 0;
-	if((pthread_err = pthread_mutex_unlock(pthread_err)) != 0)
+	if((pthread_err = pthread_mutex_unlock(mutex)) != 0)
 		err_exit(pthread_err,"mutex unlock failed");
-#endif
     return true;
 }
+
+////////////////////////////////////////////////////////////////////
+KETTLE::AutoLock::AutoLock(std::shared_ptr<ILock> pLock) : m_pLock(pLock){
+    m_pLock->Lock();
+}
+
+KETTLE::AutoLock::~AutoLock(){
+    m_pLock->UnLock();
+}   

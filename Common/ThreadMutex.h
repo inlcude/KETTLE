@@ -12,51 +12,17 @@ namespace KETTLE
 		virtual bool UnLock() = 0;
 	};
 
+/////////////////////////////////////////////////////////////
 	class ThreadMutex final : public ILock
 	{
-	public:
-		ThreadMutex() {
-#if __WINDOWS__
-            // ����̬������
-			m_HandleMutex = CreateMutex(NULL, false, NULL);
-#elif __LINUX__
-
-#endif
-		}
-
-		virtual bool Lock() override final
-		{
-#if __WINDOWS__
-			DWORD return_code = WaitForSingleObject(m_HandleMutex, INFINITE);
-            // wait handle active, WAIT_OBJECT_0 is success
-            if (WAIT_OBJECT_0 != return_code) return false;
-#elif __LINUX__
-#endif
-			return true;
-		}
-
-		virtual bool UnLock() override final
-		{
-#if __WINDOWS__
-            ReleaseMutex(m_HandleMutex);
-#elif __LINUX__
-#endif
-			return true;
-		}
-		~ThreadMutex()
-		{
-#if __WINDOWS__
-			CloseHandle(m_HandleMutex);
-#elif __LINUX__
-#endif
-		}
-	private:
-#if __WINDOWS__
-		HANDLE           m_HandleMutex;
-#elif __LINUX__
-#endif
+		public:
+			ThreadMutex();
+			~ThreadMutex();
+		private:
+			pthread_mutex_t mutex;
 	};
 
+/////////////////////////////////////////////////////////////////
 	class ProcessMutex final : public ILock
 	{
 		public:
@@ -65,26 +31,17 @@ namespace KETTLE
 			virtual bool Lock() override final;
 			virtual bool UnLock() override final;
 		private:
-			#ifdef __LINUX__
-				pthread_mutex_t* mutex; 
-			#endif
+			pthread_mutex_t* mutex; 
 	};
 
-
+//////////////////////////////////////////////////////////////////
 	class AutoLock
 	{
 	public:
-        AutoLock(ILock* pLock) : m_pLock(pLock) {
-			m_pLock->Lock();
-		}
-
-		~AutoLock()
-		{
-			m_pLock->UnLock();
-		}
+        AutoLock(std::shared_ptr<ILock>);
+		~AutoLock();
 	private:
-		ILock*              m_pLock;
-		
+		std::shared_ptr<ILock>   m_pLock;
 	};
 }
 

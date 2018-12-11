@@ -1,7 +1,7 @@
 #ifndef __LOG_H__
 #define __LOG_H__
 
-#include"KETTLEPLatform.h"
+#include"KETTLEPlatform.h"
 
 void err_msg(const char*,...);
 void err_dump(const char*,...) __attribute__((noreturn));

@@ -2,6 +2,7 @@
 #define __VAR_LIST_H__
 
 #include "KETTLEPlatform.h"
+#include"MemoryTrace.h"
 
 using namespace KETTLE;
 namespace	KETTLE

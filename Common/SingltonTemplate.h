@@ -5,7 +5,7 @@
 
 namespace KETTLE
 {
-    // 饿汉模式，需要做线程安全处理，双检测lock机制不是安全的，需要用一种方式处理
+    // singleton not thread safe
 	template<typename T>
 	class Singleton
 	{
@@ -15,7 +15,7 @@ namespace KETTLE
 		{
 			if (!__instance)
 			{
-				// 做线程安全处理
+				// dd check
 				if (!__instance)
 					__instance = new T();
 			}
@@ -35,7 +35,7 @@ namespace KETTLE
 	template<typename T>
 	T* Singleton<T>::__instance = NULL;
 
-    // 懒汉模式，不做线程安全处理
+    // singleton with thread safe
     template<typename T>
     class Singleton2
     {
