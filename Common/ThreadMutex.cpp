@@ -32,6 +32,7 @@ KETTLE::ProcessMutex::ProcessMutex(const char* lock_name) : mutex(nullptr)
 			err_exit(errno,"mmap failed");
 		close(fd);
 
+        pthread_mutex_t* mutex = (pthread_mutex_t*)address;
 		int pthread_err = 0;
 		pthread_mutexattr_t attr;  
 		if((pthread_err = pthread_mutexattr_init(&attr)) != 0)
