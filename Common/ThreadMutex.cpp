@@ -65,7 +65,30 @@ bool KETTLE::ProcessMutex::UnLock() {
 		err_exit(pthread_err,"mutex unlock failed");
     return true;
 }
+////////////////////////////////////////////////////////////////////
+KETTLE::ProcessSem::ProcessSem(const char* sem_name) : _sem_name(sem_name),_sem(nullptr){
+    _sem = sem_open(sem_name,O_CREAT|O_EXCL,S_IRUSR|S_IWUSR|S_IROTH,1);
+    if(_sem == SEM_FAILED){
+        _sem = sem_open("shared_sem",O_CREAT,S_IRUSR|S_IWUSR|S_IROTH);
+        if(_sem == SEM_FAILED)
+            err_exit(errno,"create sem failed");
+    }
+}
 
+KETTLE::ProcessSem::~ProcessSem(){
+    sem_close(_sem);
+    sem_unlink(_sem_name.c_str());
+}
+
+bool KETTLE::ProcessSem::Lock(){
+    sem_wait(_sem);
+    return true;
+}
+
+bool KETTLE::ProcessSem::UnLock(){
+    sem_post(_sem);
+    return true;
+}
 ////////////////////////////////////////////////////////////////////
 KETTLE::AutoLock::AutoLock(std::shared_ptr<ILock> pLock) : m_pLock(pLock){
     m_pLock->Lock();
