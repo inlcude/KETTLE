@@ -4,6 +4,10 @@
 #include<string.h>
 #include<iostream>
 #include<memory>
+#include<functional>
+#include<atomic>
+#include<list>
+#include<vector>
 
 #include<sys/types.h>
 #include<arpa/inet.h>
@@ -33,6 +37,8 @@
 #include<stddef.h>
 #include<pthread.h>
 #include<stdarg.h>
+#include<semaphore.h>
+#include<sys/timerfd.h>
 
 #pragma pack(push,1)
 namespace KETTLE{

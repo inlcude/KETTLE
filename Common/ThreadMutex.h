@@ -26,6 +26,15 @@ namespace KETTLE
 	};
 
 /////////////////////////////////////////////////////////////////
+
+// not safe for 2 process 
+// process A open mutex
+//						process B open mutex
+//						process B lock mutex
+// process A init mutex
+// process A lock mutex
+// 
+// result : two process both lock mutex; should use posix sem instead this ProcessMutex
 	class ProcessMutex final : public ILock{
 		public:
 			ProcessMutex(const char* lock_name);
@@ -34,6 +43,19 @@ namespace KETTLE
 			virtual bool UnLock() override final;
 		private:
 			pthread_mutex_t* mutex; 
+	};
+//////////////////////////////////////////////////////////////////
+	class ProcessSem final : public ILock
+	{
+		public:
+			ProcessSem(const char* sem_name);
+			~ProcessSem();
+		public:
+			virtual bool Lock() override final;
+			virtual bool UnLock() override final;
+		private:
+			sem_t* _sem;
+			std::string _sem_name;
 	};
 
 //////////////////////////////////////////////////////////////////
