@@ -7,14 +7,11 @@ namespace KETTLE
 {
     // singleton not thread safe
 	template<typename T>
-	class Singleton
-	{
+	class Singleton{
 	public:
         // DCLP(double check lock pattern) is not safe
-		static T*    GetInstance()
-		{
-			if (!__instance)
-			{
+		static T*    GetInstance(){
+			if (!__instance){
 				// dd check
 				if (!__instance)
 					__instance = new T();
@@ -23,8 +20,7 @@ namespace KETTLE
 			return __instance;
 		}
 
-		~Singleton()
-		{
+		~Singleton(){
 			SAFE_DELETE_PTR(__instance);
 		}
 	protected:
@@ -35,13 +31,12 @@ namespace KETTLE
 	template<typename T>
 	T* Singleton<T>::__instance = NULL;
 
+////////////////////////////////////////////////////////////////
     // singleton with thread safe
     template<typename T>
-    class Singleton2
-    {
+    class Singleton2{
     public:
-        static T* GetInstance()
-        {
+        static T* GetInstance(){
             return __instance;
         }
 

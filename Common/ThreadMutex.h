@@ -4,30 +4,32 @@
 
 namespace KETTLE
 {
-	class ILock
-	{
+	class ILock{
+		friend class AutoLock;
 	public:
         virtual ~ILock() {}
+	protected:
 		virtual bool Lock() = 0;
 		virtual bool UnLock() = 0;
 	};
 
 /////////////////////////////////////////////////////////////
-	class ThreadMutex final : public ILock
-	{
+	class ThreadMutex final : public ILock{
 		public:
 			ThreadMutex();
 			~ThreadMutex();
+		protected:
+			virtual bool Lock() override final;
+			virtual bool UnLock() override final;
 		private:
 			pthread_mutex_t mutex;
 	};
 
 /////////////////////////////////////////////////////////////////
-	class ProcessMutex final : public ILock
-	{
+	class ProcessMutex final : public ILock{
 		public:
 			ProcessMutex(const char* lock_name);
-		public:
+		protected:
 			virtual bool Lock() override final;
 			virtual bool UnLock() override final;
 		private:
@@ -35,8 +37,7 @@ namespace KETTLE
 	};
 
 //////////////////////////////////////////////////////////////////
-	class AutoLock
-	{
+	class AutoLock final{
 	public:
         AutoLock(std::shared_ptr<ILock>);
 		~AutoLock();

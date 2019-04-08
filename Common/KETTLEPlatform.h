@@ -35,8 +35,7 @@
 #include<stdarg.h>
 
 #pragma pack(push,1)
-namespace KETTLE
-{
+namespace KETTLE{
 	typedef char              int8;
 	typedef unsigned char     uint8;
 	typedef short             int16;
@@ -51,5 +50,6 @@ namespace KETTLE
 	typedef uint32            THREAD_ID;
 
 }
+
 #pragma pack(pop)
 #endif

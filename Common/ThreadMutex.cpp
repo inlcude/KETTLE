@@ -9,6 +9,20 @@ KETTLE::ThreadMutex::ThreadMutex():mutex(PTHREAD_MUTEX_INITIALIZER){
 KETTLE::ThreadMutex::~ThreadMutex(){
     pthread_mutex_destroy(&mutex);
 }
+
+bool KETTLE::ThreadMutex::Lock(){
+	int pthread_err = 0;
+	if((pthread_err = pthread_mutex_lock(&mutex)) != 0){
+		err_exit(pthread_err,"pthread mutex lock failed");
+	}
+}
+
+bool KETTLE::ThreadMutex::UnLock(){
+	int pthread_err = 0;
+	if((pthread_err = pthread_mutex_unlock(&mutex)) != 0)
+		err_exit(pthread_err,"mutex unlock failed");
+    return true;
+}
 /////////////////////////////////////////////////////////////////
 KETTLE::ProcessMutex::ProcessMutex(const char* lock_name) : mutex(nullptr)
 {
@@ -48,14 +62,14 @@ KETTLE::ProcessMutex::ProcessMutex(const char* lock_name) : mutex(nullptr)
 
 bool KETTLE::ProcessMutex::Lock(){
     int pthread_err = 0;
-	if((pthread_err = pthread_mutex_lock(mutex)) != 0)
-	{
+	if((pthread_err = pthread_mutex_lock(mutex)) != 0){
 		if(pthread_err != EOWNERDEAD)
 			err_exit(pthread_err,"pthread mutex lock failed");
 		if((pthread_err = pthread_mutex_consistent(mutex)) != 0)
 		    err_exit(pthread_err,"mutex consisten error");
         return false;
 	}
+
     return true;
 }
 
