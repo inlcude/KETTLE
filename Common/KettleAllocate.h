@@ -6,6 +6,7 @@
 #include"Log.h"
 
 #include<unordered_map>
+#include<values.h>
 /////////////////////////////////////////////////////////////
 namespace KETTLE{
 
@@ -38,21 +39,23 @@ public:
 /////////////////////////////////////////////////////////////
 template<KETTLE::uint32 MAX_ALLOCATE_SIZE = 1024>
 class KettleMemoryPool : public IAllocate{
+    typedef std::unordered_map<size_t,MemoryBlock*> MEMORY_POOL;
+    typedef MEMORY_POOL::iterator MP_ITER;
+    typedef MEMORY_POOL::const_iterator CON_MP_ITER;
 public:
     KettleMemoryPool() : MAX_SIZE(MAX_ALLOCATE_SIZE){
-        for(KETTLE::uint32 i = 3; i <= 10;++i){
-            const size_t nSize = 1 << i;
+        memset(m_MemPool,0,sizeof(m_MemPool));
+        for(KETTLE::uint32 i = 1; i <= MAX_POOL_SIZE;++i){
+            size_t nSize = POOL_ALIGNMENT * i;
             MemoryBlock* pMemBlock = SplitMemory(nSize);
-            m_MemPool.push_back(std::make_pair<nSize,pMemBlock>);
+            m_MemPool[i-1] = pMemBlock;
         }
     }
 
 
     virtual void* allocate(size_t nSize) override final{
-
         // 调整为8的边界
         const size_t nAllignSize = nSize + ((POOL_ALIGNMENT-((nSize) % POOL_ALIGNMENT)) % POOL_ALIGNMENT);
-
         // 大于内存池能够分配的最大内存尺寸，直接从malloc分配
         if(nAllignSize > MAX_SIZE)
             return malloc(nSize);
@@ -68,12 +71,12 @@ public:
 
         return pMemory;
     }
-    virtual void  deallocate(void* nSize) override final{
+    virtual void  deallocate(void* p) override final{
 
     }
 private:
-    MemoryBlock* SplitMemory(const size_t nSize){
-        if(nSize <= 8)
+    MemoryBlock* SplitMemory(size_t nSize){
+        if(nSize < POOL_ALIGNMENT)
             return nullptr;
 
         KETTLE::int8* pMemory = (KETTLE::int8*)malloc(MAX_PAGE_SIZE);
@@ -84,7 +87,7 @@ private:
 
         MemoryBlock* pBlock = (MemoryBlock*)malloc(sizeof(MemoryBlock));
         memset(pBlock,0,sizeof(MemoryBlock));
-        pBlock->BlockSize = nSize；
+        pBlock->BlockSize = nSize;
         pBlock->MaxNodeNum = split_times;
         pBlock->free = split_times;
         pBlock->pHead = (MemoryNode*)pMemory;
@@ -92,53 +95,56 @@ private:
         pBlock->BlockAddr = pMemory;
 
         // 创建内存链表，
-        for(KETTLE::uint32 i = 0；i < split_times;++i){
-            MemoryBlock* pNext = (MemoryBlock*)(pMemory + nSize * i);
+        for(KETTLE::uint32 i = 0; i < split_times;++i){
+            MemoryNode* pNext = (MemoryNode*)(pMemory + nSize * i);
 
-            if(i == (split_times - 1)）
+            if(i == (split_times - 1))
                 pNext->pNext = nullptr;
             else
-                pNext->pNext = (MemoryBlock*)(pMemory + nSize * (i + 1));
+                pNext->pNext = (MemoryNode*)(pMemory + nSize * (i + 1));
         }
 
         return pBlock;
     }
 
+    /**
+     * 这里可以做优化，做缓存寻找可用Block快，不然太慢了，
+     */
     MemoryBlock* FindBlock(const size_t nSize){
-        MP_ITER iter = m_MemPool.find(nSize);
-        if(iter == m_MemPool.end()){
-            // 没找到，应该不会出现这种情况，有这种情况，就直接退出
+
+        KETTLE::int32 index = nSize / POOL_ALIGNMENT - 1;
+        if(index >= MAX_POOL_SIZE)
             return NULL;
-        }
         else{
-            MemoryBlock* pBlock = iter->second;
-            while(pBlock){
-                if(pBlock->free != 0)
+            MemoryBlock* pHeadBlock = m_MemPool[index];
+            MemoryBlock* pFindBlock = pHeadBlock;
+            while(pFindBlock){
+                if(pFindBlock->free != 0)
                     break;
                 else
-                    pBlock = pBlock->pNext;
+                    pFindBlock = pFindBlock->pNext;
             }
 
-            if(!pBlock){
-                pBlock = SplitMemory(nSize);
-                if(!pBlock)
+            if(!pFindBlock){
+                pFindBlock = SplitMemory(nSize);
+                if(!pFindBlock)
                     err_exit(errno,"split Memory error!");
-                pBlock->pNext = iter->second;
-                iter->second = pBlock;
+                pFindBlock->pNext = pHeadBlock;
+                m_MemPool[index] = pFindBlock;
             }
 
-            return pBlock;
+            return pFindBlock;
         }
     }
 private:
-    typedef std::unordered_map<const size_t,MemoryBlock*> MEMORY_POOL;
-    typedef std::unordered_map<const size_t,MemoryBlock*>::iterator MP_ITER;
-    typedef std::unordered_map<const size_t,MemoryBlock*>::const_iterator CON_MP_ITER;
+
 
     const KETTLE::uint32 MAX_SIZE;
+    const KETTLE::uint32 MAX_POOL_SIZE = MAX_SIZE / POOL_ALIGNMENT;
     static const KETTLE::uint32 MAX_PAGE_SIZE = 4096;
-    static const KEETLE::uint32 POOL_ALIGNMENT = 8;
-    MEMORY_POOL     m_MemPool;
+    static const KETTLE::uint32 POOL_ALIGNMENT = 8;
+    //MEMORY_POOL     m_MemPool;
+    MemoryBlock* m_MemPool[MAX_ALLOCATE_SIZE / POOL_ALIGNMENT];
 };
 
 /////////////////////////////////////////////////////////////
@@ -147,7 +153,7 @@ public:
     KettleAllocate(std::shared_ptr<IAllocate> mempool);
 
     virtual void* allocate(size_t nSize) override final;
-    virtual void  deallocate(void* nSize) override final;
+    virtual void  deallocate(void* p) override final;
 private:
     std::shared_ptr<IAllocate>          m_MemoryPool;
 };
@@ -156,9 +162,11 @@ private:
 }
 
 /////////////////////////////////////////////////////////////
+#ifdef __USE_MEMPOOL__
 void* operator new(size_t nSize);
 void* operator new[](size_t nSize);
 void operator delete(void* ptr);
 void operator delete[](void* ptr);
+#endif
 /////////////////////////////////////////////////////////////
 #endif
