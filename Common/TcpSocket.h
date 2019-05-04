@@ -1,21 +1,16 @@
 #ifndef __TCP_SOCKET_H__
 #define __TCP_SOCKET_H__
 #include "KETTLEPlatform.h"
-namespace KETTLE
-{
-	class TcpSocket
-	{
-	public:
-		TcpSocket(void)
-		{
-			m_Socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-			if (m_Socket == -1) std::cout << "error";
-				// print some thing
 
-		}
+
+namespace KETTLE{
+	
+	class TcpSocket{
+	public:
+		TcpSocket();
 		~TcpSocket() {}
 
-		KETTLE::int32                    GetSocket();
+		KETTLE::int32                    GetSocket() const;
 		bool                             SetBlockMode();
 		bool                             SetKeepAlive();
 	private:
