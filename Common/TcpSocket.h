@@ -7,14 +7,14 @@ namespace KETTLE{
 	
 	class TcpSocket{
 	public:
-		TcpSocket();
+		TcpSocket(bool block_mode);
 		~TcpSocket() {}
 
-		KETTLE::int32                    GetSocket() const;
-		bool                             SetBlockMode();
-		bool                             SetKeepAlive();
+		const KETTLE::int32                    GetSocket() const;
+		bool                             	   SetKeepAlive();
 	private:
-		KETTLE::int32                    m_Socket;
+		KETTLE::int32                    _socket;
+		bool							 _block;
 	};
 }
 
