@@ -7,8 +7,7 @@ namespace KETTLE
     {
     public:
         template <typename T>
-        static KETTLE::int32 getArrayLen(T& array)
-        {
+        static KETTLE::int32 getArrayLen(T& array){
             return (sizeof(array) / sizeof(array[0]));
         }
 

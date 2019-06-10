@@ -6,8 +6,23 @@
 #include"KETTLEPlatform.h"
 #include"ThreadMutex.h"
 
-namespace KETTLE
-{
-	
+namespace KETTLE{
+	class Thread{
+        public:
+            typedef std::function<void()> ThreadFunc;
+
+            Thread(ThreadFunc func);
+            ~Thread(){}
+
+            void start();
+            void stop();
+            void loop();
+
+    
+        private:
+            ThreadFunc      _func;
+            KETTLE::int32   _tid;
+            bool            _running;
+    };
 }
 #endif
