@@ -2,6 +2,8 @@
 
 static int MAXLINE = 1024;
 
+using namespace KETTLE;
+
 static void err_doit(int errnoflag,int error,const char* fmt,va_list ap)
 {
     char buf[MAXLINE];
@@ -82,4 +84,18 @@ void err_quit(const char* fmt,...)
     err_doit(0,0,fmt,ap);
     va_end(ap);
     exit(1);
+}
+
+
+
+LoggerFile::LoggerFile(){
+    
+    timeval time;
+    gettimeofday(&time);
+    file = fopen(,"wa+");
+}
+
+void LoggerFile::flush(std::shared_ptr<LoggerStream> stream){
+    fwrite_unlocked(stream->data(),stream->length(),1,file);
+    fflush_unlocked();
 }
