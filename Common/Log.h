@@ -17,7 +17,7 @@ namespace KETTLE{
 
     class LoggerStream{
         public:
-            LoggerStream(){
+            LoggerStream():curPos(0){
                 cleanUp();
             }
 
@@ -81,7 +81,7 @@ namespace KETTLE{
             void append(const char* str){
                 int len = strlen(str);
                 if(availd() >= len){
-                    strncpy(&logBuffer[curPos],str,len);
+                    memcpy(&logBuffer[curPos],str,len);
                     addlength(len);
                 }
             }
@@ -109,8 +109,8 @@ namespace KETTLE{
 
 typedef void (*OutPutFunc)(const char* log,int len);
 typedef void (*FlushFunc)();
-void DefaultWrite(const char* log,int len);
-void DefaultFlush();
+//void DefaultWrite(const char* log,int len);
+
 
     class Logger{
         public:
@@ -123,10 +123,13 @@ void DefaultFlush();
                 KETTLE_LOGGER_LEVEL_NUMS,
             };
         public:
-            Logger(LogLevel level,OutPutFunc output_func = DefaultWrite,FlushFunc flush_func= DefaultFlush);
+            Logger(LogLevel level,OutPutFunc output_func = &Logger::DefaultWrite,FlushFunc flush_func = &Logger::DefaultFlush);
             ~Logger();
 
             LoggerStream&   Stream(){return stream;}
+            
+            static void DefaultWrite(const char* log,int len);
+            static void DefaultFlush();
 
         private:
             LogLevel                            logLevel;

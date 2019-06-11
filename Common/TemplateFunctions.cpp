@@ -13,7 +13,7 @@ void KETTLE::CommonFunction::FunctionSleep(int milsec)
 #endif
 }
 
-const std::string& CommonFunction::GetAppName(){
+std::string CommonFunction::GetAppName(){
 
     char path[128] = {0};
     int rval = readlink("/proc/self/exe/",path,sizeof(path)-1);
@@ -23,15 +23,19 @@ const std::string& CommonFunction::GetAppName(){
     return std::string(pch);
 }
 
-const std::string& CommonFunction::now(){
+std::string CommonFunction::now(){
     struct timeval time_struct;
     gettimeofday(&time_struct,NULL);
     tm* tm_time = localtime(&time_struct.tv_sec);
 
     char szTime[128] = {0};
 
-    snprintf(szTime,128,"%d_%d%d_%d%d%d",
-    tm_time->tm_year,tm_time->tm_mon,tm_time->tm_mday,tm_time->tm_hour,tm_time->tm_min,tm_time->tm_sec);
+    snprintf(szTime,128,"%04d-%02d%02d-%d:%d:%d",
+    tm_time->tm_year+1900,tm_time->tm_mon+1,tm_time->tm_mday,tm_time->tm_hour,tm_time->tm_min,tm_time->tm_sec);
 
     return std::string(szTime);
+}
+
+std::string CommonFunction::tid(){
+    pthread_t tid = pthread_self();
 }

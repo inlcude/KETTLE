@@ -103,13 +103,7 @@ void LoggerFile::flush(std::shared_ptr<LoggerStream> stream){
     fflush_unlocked(file);
 }
 
-void DefaultWrite(const char* log,int len){
-    fwrite(log,len,1,stdout);
-}
 
-void DefaultFlush(){
-    fflush(stdout);
-}
 
 static const char* LOGGER_LEVEL[] = {
     "LOG_INFO",
@@ -123,11 +117,19 @@ Logger::Logger(LogLevel level,OutPutFunc output_func,FlushFunc flush_func) :
 logLevel(level),
 outfunc(output_func),
 flushfunc(flush_func){
-    stream << "[" << LOGGER_LEVEL[level] << "]" << "[" << CommonFunction::now().c_str() << "]";
+    stream << "[" << LOGGER_LEVEL[level] << "]" << "[" << std::string(std::move(CommonFunction::now())).c_str() << "]";
 }
 
 Logger::~Logger(){
     stream << "\n";
-    outfunc(stream.data(),stream.length());
+    outfunc(stream.data(),stream.length()+1);
     flushfunc();
+}
+
+void Logger::DefaultWrite(const char* log,int len){
+    fwrite(log,len,1,stdout);
+}
+
+void Logger::DefaultFlush(){
+    fflush(stdout);
 }

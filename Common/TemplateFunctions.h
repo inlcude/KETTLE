@@ -12,10 +12,9 @@ namespace KETTLE
         }
 
         static void FunctionSleep(int milsec);
-
-        static const std::string& GetAppName();
-
-        static const std::string& now();
+        static std::string GetAppName();
+        static std::string now();
+        static std::string tid();
 
     };
 
