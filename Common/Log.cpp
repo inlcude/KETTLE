@@ -1,4 +1,5 @@
 #include "Log.h"
+#include "TemplateFunctions.h"
 
 static int MAXLINE = 1024;
 
@@ -89,13 +90,44 @@ void err_quit(const char* fmt,...)
 
 
 LoggerFile::LoggerFile(){
-    
-    timeval time;
-    gettimeofday(&time);
-    file = fopen(,"wa+");
+    char szFileName[128] = {0};
+    /*
+     *  YYYY_MMDD_HHMMSS_PROCESSNAME.log
+     */
+    snprintf(szFileName,128,"%s_%s.log",CommonFunction::now().c_str(),CommonFunction::GetAppName().c_str());
+    file = fopen(szFileName,"wa+");
 }
 
 void LoggerFile::flush(std::shared_ptr<LoggerStream> stream){
     fwrite_unlocked(stream->data(),stream->length(),1,file);
-    fflush_unlocked();
+    fflush_unlocked(file);
+}
+
+void DefaultWrite(const char* log,int len){
+    fwrite(log,len,1,stdout);
+}
+
+void DefaultFlush(){
+    fflush(stdout);
+}
+
+static const char* LOGGER_LEVEL[] = {
+    "LOG_INFO",
+    "LOG_TRACE",
+    "LOG_DEBUG",
+    "LOG_ERROR",
+    "LOG_FATA"
+};
+
+Logger::Logger(LogLevel level,OutPutFunc output_func,FlushFunc flush_func) : 
+logLevel(level),
+outfunc(output_func),
+flushfunc(flush_func){
+    stream << "[" << LOGGER_LEVEL[level] << "]" << "[" << CommonFunction::now().c_str() << "]";
+}
+
+Logger::~Logger(){
+    stream << "\n";
+    outfunc(stream.data(),stream.length());
+    flushfunc();
 }

@@ -18,13 +18,12 @@ namespace KETTLE{
     class LoggerStream{
         public:
             LoggerStream(){
-                logBuffer.resize(BUFFSIZE);
                 cleanUp();
             }
 
-            void cleanUp() {memset(&(logBuffer[0]),0,BUFFSIZE);}
+            void cleanUp() {memset(logBuffer,0,BUFFSIZE);}
             KETTLE::int32 availd() {return BUFFSIZE - curPos;}
-            const char* data() {return &(logBuffer[0]);}
+            const char* data() {return logBuffer;}
             KETTLE::int32 length() {return curPos;}
 
         public:
@@ -56,6 +55,12 @@ namespace KETTLE{
                 append(log);
                 return *this;
             }
+
+            LoggerStream& operator <<(const KETTLE::int8* log){
+                *this << const_cast<KETTLE::int8*>(log);
+                return *this;
+            }
+
             LoggerStream& operator<< (KETTLE::double64 log){
                 char szBuffer[128] = {0};
                 snprintf(szBuffer,128,"%f",log);
@@ -82,7 +87,7 @@ namespace KETTLE{
             }
         private:
             static const KETTLE::int32 BUFFSIZE = 4096;
-            std::vector<char>       logBuffer;
+            char                    logBuffer[BUFFSIZE];
             KETTLE::int32           curPos;
 
     };
@@ -96,6 +101,17 @@ namespace KETTLE{
             FILE*                               file;
     };
 
+#define LOG_INFO  Logger(Logger::KETTLE_LOGGER_LEVEL_INFO).Stream()
+#define LOG_TRACE Logger(Logger::KETTLE_LOGGER_LEVEL_TRACE).Stream()
+#define LOG_DEBUG Logger(Logger::KETTLE_LOGGER_LEVEL_DEBUG).Stream()
+#define LOG_ERROR Logger(Logger::KETTLE_LOGGER_LEVEL_ERROR).Stream()
+#define LOG_FATA  Logger(Logger::KETTLE_LOGGER_LEVEL_FATA).Stream()
+
+typedef void (*OutPutFunc)(const char* log,int len);
+typedef void (*FlushFunc)();
+void DefaultWrite(const char* log,int len);
+void DefaultFlush();
+
     class Logger{
         public:
             enum LogLevel{
@@ -106,19 +122,17 @@ namespace KETTLE{
                 KETTLE_LOGGER_LEVEL_FATA,
                 KETTLE_LOGGER_LEVEL_NUMS,
             };
+        public:
+            Logger(LogLevel level,OutPutFunc output_func = DefaultWrite,FlushFunc flush_func= DefaultFlush);
+            ~Logger();
 
-        private:
-            void    AppendLog(KETTLE::int32 log);
-            void    AppendLog(KETTLE::int16 log);
-            void    AppendLog(KETTLE::int8 log);
-            void    AppendLog(KETTLE::int8* log);
-            void    AppendLog(KETTLE::double64 log);
-            void    AppendLog(KETTLE::float32 log);
+            LoggerStream&   Stream(){return stream;}
 
         private:
             LogLevel                            logLevel;
-            
-            std::unique_ptr<ThreadMutex>        mutex;
+            LoggerStream                        stream;
+            OutPutFunc                          outfunc;
+            FlushFunc                           flushfunc;
 
     };
 }
