@@ -47,10 +47,10 @@ public:
         close(timer_fd);
     }
 
-    void register_timer(Timer* timer)
+    void register_timer(Timer* timer);
     void unregister_timer(int sequence);
 
-    void tick()
+    void tick();
 
     int32         getTimerfd(){return timer_fd;}
 private:

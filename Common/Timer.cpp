@@ -44,7 +44,7 @@ void TimerQuene::unregister_timer(int sequence){
 
 }
 
-void TimerQune::tick(){
+void TimerQuene::tick(){
     TimerList& list = container_[curslot];
     ListIter iter = list.begin();
     while(iter != list.end()){

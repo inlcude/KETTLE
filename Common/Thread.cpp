@@ -3,7 +3,6 @@
 #include"Thread.h"
 #include"Log.h"
 
-using namespace KETTLE;
 static void* ThreadFunction(void* param){
     Thread* pThread = (Thread*)param;
     pThread->loop();
@@ -11,8 +10,12 @@ static void* ThreadFunction(void* param){
     return (void*)0;
 }
 
-KETTLE::Thread::Thread(ThreadFunc func)
-: _func(func),_tid(0){
+Thread::Thread(ThreadFunc func)
+: _func(func),_tid(0),_countDown(1){
+
+}
+
+Thread::~Thread(){
 
 }
 
@@ -20,6 +23,7 @@ void KETTLE::Thread::start(){
     if(pthread_create(NULL,NULL,&ThreadFunction,this) != 0)
         LOG_FATA << "create thread error" << " reson:" << strerror(errno); 
     
+    _countDown.wait();
     _running = true;
 }
 
@@ -28,7 +32,6 @@ void KETTLE::Thread::stop(){
 }
 
 void KETTLE::Thread::loop(){
-    while(_running){
-        _func();
-    }
+    _countDown.countdown();
+    _func();
 }

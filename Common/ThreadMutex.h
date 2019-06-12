@@ -2,6 +2,7 @@
 #define __THREAD_MUTEX_H__
 #include "KETTLEPlatform.h"
 
+using namespace KETTLE;
 namespace KETTLE
 {
 	class ILock{
@@ -62,7 +63,8 @@ namespace KETTLE
 //////////////////////////////////////////////////////////////////
 	class AutoLock final{
 	public:
-        AutoLock(std::shared_ptr<ILock>);
+        AutoLock(std::shared_ptr<ILock> mutex);
+		AutoLock(ILock* mutex);
 		~AutoLock();
 	private:
 		std::shared_ptr<ILock>   m_pLock;

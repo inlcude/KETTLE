@@ -108,6 +108,9 @@ KETTLE::AutoLock::AutoLock(std::shared_ptr<ILock> pLock) : m_pLock(pLock){
     m_pLock->Lock();
 }
 
+AutoLock::AutoLock(ILock* mutex):m_pLock(mutex){
+
+}
 KETTLE::AutoLock::~AutoLock(){
     m_pLock->UnLock();
 }   

@@ -1,9 +1,11 @@
 #include "stdafx.h"
 #include "CountDownLatch.h"
+#include "ThreadCondition.h"
+#include "ThreadMutex.h"
 
 
-CountDownLatch::CountDownLatch(int32 count):countDown(count){
-    _condition.reset(new ThreadCondition(_mutex));
+CountDownLatch::CountDownLatch(int32 count):countDown(count)
+,_condition(new ThreadCondition(_mutex)){
 }
 
 void CountDownLatch::wait(){

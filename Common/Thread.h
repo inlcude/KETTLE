@@ -5,7 +5,9 @@
 
 #include"KETTLEPlatform.h"
 #include"ThreadMutex.h"
+#include "CountDownLatch.h"
 
+using namespace KETTLE;
 namespace KETTLE{
 	class Thread{
         public:
@@ -20,6 +22,7 @@ namespace KETTLE{
 
     
         private:
+            CountDownLatch  _countDown;
             ThreadFunc      _func;
             pthread_t       _tid;
             bool            _running;
