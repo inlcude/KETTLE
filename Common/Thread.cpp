@@ -16,7 +16,7 @@ Thread::Thread(ThreadFunc func)
 }
 
 Thread::~Thread(){
-
+    pthread_detach(_tid);
 }
 
 void KETTLE::Thread::start(){
@@ -34,4 +34,7 @@ void KETTLE::Thread::stop(){
 void KETTLE::Thread::loop(){
     _countDown.countdown();
     _func();
+}
+
+void Thread::join(){
 }

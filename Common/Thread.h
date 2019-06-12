@@ -19,6 +19,7 @@ namespace KETTLE{
             void start();
             void stop();
             void loop();
+            void join();
 
     
         private:
