@@ -88,23 +88,6 @@ void err_quit(const char* fmt,...)
 }
 
 
-
-LoggerFile::LoggerFile(){
-    char szFileName[128] = {0};
-    /*
-     *  YYYY_MMDD_HHMMSS_PROCESSNAME.log
-     */
-    snprintf(szFileName,128,"%s_%s.log",CommonFunction::now().c_str(),CommonFunction::GetAppName().c_str());
-    file = fopen(szFileName,"wa+");
-}
-
-void LoggerFile::flush(std::shared_ptr<LoggerStream> stream){
-    fwrite_unlocked(stream->data(),stream->length(),1,file);
-    fflush_unlocked(file);
-}
-
-
-
 static const char* LOGGER_LEVEL[] = {
     "LOG_INFO",
     "LOG_TRACE",
@@ -124,6 +107,9 @@ Logger::~Logger(){
     stream << "\n";
     outfunc(stream.data(),stream.length()+1);
     flushfunc();
+
+    if(logLevel >= KETTLE_LOGGER_LEVEL_FATA)
+        std::abort();
 }
 
 void Logger::DefaultWrite(const char* log,int len){

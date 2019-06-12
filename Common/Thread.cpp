@@ -18,7 +18,7 @@ KETTLE::Thread::Thread(ThreadFunc func)
 
 void KETTLE::Thread::start(){
     if(pthread_create(NULL,NULL,&ThreadFunction,this) != 0)
-        err_sys("create thread error",strerror(errno)); 
+        LOG_FATA << "create thread error" << " reson:" << strerror(errno); 
     
     _running = true;
 }

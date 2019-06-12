@@ -15,6 +15,7 @@ namespace KETTLE
 
 /////////////////////////////////////////////////////////////
 	class ThreadMutex final : public ILock{
+		friend class ThreadCondition;
 		public:
 			ThreadMutex();
 			~ThreadMutex();

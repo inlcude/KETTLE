@@ -13,7 +13,6 @@ namespace KETTLE{
 		bool                             	   SetKeepAlive();
 		const KETTLE::int32 GetSocket() const;
 	private:
-		KETTLE::int32                    m_Socket;
 		sockaddr_in					     address;
 		KETTLE::int32                    _socket;
 		bool							 _block;

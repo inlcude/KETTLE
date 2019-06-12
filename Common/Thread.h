@@ -21,7 +21,7 @@ namespace KETTLE{
     
         private:
             ThreadFunc      _func;
-            KETTLE::int32   _tid;
+            pthread_t       _tid;
             bool            _running;
     };
 }
