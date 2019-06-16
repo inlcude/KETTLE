@@ -11,8 +11,10 @@ namespace KETTLE{
         public:
             LoggerFile();
             void flush();
+            void append(const char* log,uint32 len);
         private:
             FILE*                               file;
+            int64                               writesize;
     };
 }
 
