@@ -17,6 +17,10 @@ namespace KETTLE{
             KETTLE::int32 availd() {return BUFFSIZE - curPos;}
             const char* data() {return logBuffer;}
             KETTLE::int32 length() {return curPos;}
+            void reset(){
+                cleanUp();
+                curPos = 0;
+            }
 
         public:
             LoggerStream& operator<< (KETTLE::int64 log){

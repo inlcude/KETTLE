@@ -13,6 +13,7 @@ namespace KETTLE{
 
     class AsynLog{
         typedef std::unique_ptr<LargeLoggerStream> LogBuffer;
+        typedef std::vector<LogBuffer>             LogBuffers;
     public:
         AsynLog();
         ~AsynLog();
@@ -29,7 +30,7 @@ namespace KETTLE{
         LogBuffer                               _writebuffer;
         LogBuffer                               _currentbuffer;
         LogBuffer                               _nextbuffer;
-        std::vector<LogBuffer>                  _buffers;
+        LogBuffers                              _buffers;
         bool                                    _running;
         ThreadMutex                             _mutex;
         std::unique_ptr<ThreadCondition>        _condition;

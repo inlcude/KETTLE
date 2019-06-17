@@ -10,7 +10,9 @@ _running(false),
 _latch(1),
 _mutex(),
 _condition(new ThreadCondition(_mutex)),
-_file(new LoggerFile()){
+_file(new LoggerFile()),
+_currentbuffer(new LargeLoggerStream),
+_nextbuffer(new LargeLoggerStream){
 }
 
 AsynLog::~AsynLog(){
@@ -19,12 +21,46 @@ AsynLog::~AsynLog(){
 
 void AsynLog::thread_func(){
     _latch.countdown();
-
+    LogBuffers buffers;
+    LogBuffer buffer1(new LargeLoggerStream());
+    LogBuffer buffer2(new LargeLoggerStream());
     while(_running){
 
+        {
+            AutoLock lock(&_mutex);
+            // 等待日志发送信号解除
+            if(buffers.empty())
+                _condition->wait();
+            _buffers.push_back(std::move(_currentbuffer));
+            _currentbuffer = std::move(buffer1);
+            buffers.swap(_buffers);
+
+            if(!_nextbuffer)
+                _nextbuffer = std::move(buffer2);
+        }
+
+        for(const auto& buffer : buffers)
+            _file->append(buffer->data,buffer->length);
+        
+        if(!buffer1){
+            buffer1 = std::move(buffers.back());
+            buffers.pop_back();
+            buffer1->reset();
+        }
+
+        if(!buffer2){
+            buffer2 = std::move(buffers.back());
+            buffers.pop_back();
+            buffer2->reset();
+        }
+
+        buffers.clear();
+        _file->flush();
     }
 
-    _condition->notifyAll();
+    _file->flush();
+
+    pthread_exit((void*)0);
 }
 
 void AsynLog::start(){
@@ -34,9 +70,10 @@ void AsynLog::start(){
 }
 
 void AsynLog::stop(){
-    AutoLock autoLock(&_mutex);
+    // don't use threadmutex, deadlock
     _running = false;
-    _condition->wait();
+    _condition->notify();
+    _thread.join();
 }
 
 void AsynLog::append(const char* log,int32 len){
