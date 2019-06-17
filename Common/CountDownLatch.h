@@ -11,7 +11,7 @@ namespace KETTLE{
             ~CountDownLatch();
 
             void wait();
-            void countdown();
+            void    countdown();
         private:
             int32                                   countDown;
             ThreadMutex                             _mutex;
