@@ -16,7 +16,7 @@ void KETTLE::CommonFunction::FunctionSleep(int milsec)
 std::string CommonFunction::GetAppName(){
 
     char path[128] = {0};
-    int rval = readlink("/proc/self/exe/",path,sizeof(path)-1);
+    int rval = readlink("/proc/self/exe",path,sizeof(path)-1);
     if(rval <= -1)
         err_exit(errno,"readlink error");
     char* pch = strrchr(path,'/');

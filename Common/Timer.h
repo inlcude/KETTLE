@@ -42,10 +42,7 @@ class TimerQuene{
     typedef std::function<void()> CallBack;
 public:
     TimerQuene();
-
-    ~TimerQuene(){
-        close(timer_fd);
-    }
+    ~TimerQuene();
 
     void register_timer(Timer* timer);
     void unregister_timer(int sequence);

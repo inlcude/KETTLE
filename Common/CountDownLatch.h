@@ -1,14 +1,15 @@
 #ifndef _COUNTEDOWN_LATCH_H_
 #define _COUNTEDOWN_LATCH_H_
 #include"KETTLEPlatform.h"
+#include"ThreadMutex.h"
+#include"ThreadCondition.h"
 
 using namespace KETTLE;
 namespace KETTLE{
-    class ThreadCondition;
     class CountDownLatch{
         public:
             CountDownLatch(int32 count);
-            ~CountDownLatch();
+            ~CountDownLatch(){};
 
             void wait();
             void    countdown();

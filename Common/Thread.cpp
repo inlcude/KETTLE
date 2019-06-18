@@ -20,7 +20,7 @@ Thread::~Thread(){
 }
 
 void KETTLE::Thread::start(){
-    if(pthread_create(NULL,NULL,&ThreadFunction,this) != 0)
+    if(pthread_create(&_tid,NULL,&ThreadFunction,this) != 0)
         LOG_FATA << "create thread error" << " reson:" << strerror(errno); 
     
     _countDown.wait();

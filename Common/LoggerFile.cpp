@@ -21,7 +21,7 @@ void LoggerFile::append(const char* log,uint32 len){
     uint32 nremain = len;
 
     while (nremain > 0){
-       size_t write_size = fwrite(log,nremain,1,file);
+       size_t write_size = fwrite_unlocked(log,nremain,1,file);
        nremain -= write_size;
        if(nremain > 0)
             log += write_size;

@@ -5,6 +5,8 @@
 
 using namespace KETTLE;
 namespace KETTLE{
+    static const int32 DEFAULT_BUFFER_SIZE = 4096;
+    static const int32 LARGE_BUFFER_SIZE = 4096 * 1000;
 
         template<int32 MAX_SIZE>
         class LoggerStream{
@@ -13,8 +15,8 @@ namespace KETTLE{
                 cleanUp();
             }
 
-            void cleanUp() {memset(logBuffer,0,BUFFSIZE);}
-            KETTLE::int32 availd() {return BUFFSIZE - curPos;}
+            void cleanUp() {memset(logBuffer,0,MAX_SIZE);}
+            KETTLE::int32 availd() {return MAX_SIZE - curPos;}
             const char* data() {return logBuffer;}
             KETTLE::int32 length() {return curPos;}
             void reset(){
@@ -86,8 +88,7 @@ namespace KETTLE{
             int32                   curPos;
     };
 
-    static const int32 DEFAULT_BUFFER_SIZE = 4096;
-    static const int32 LARGE_BUFFER_SIZE = 4096 * 1000;
+
 
     typedef LoggerStream<DEFAULT_BUFFER_SIZE> DefaultLoggerStream;
     typedef LoggerStream<LARGE_BUFFER_SIZE> LargeLoggerStream;

@@ -14,7 +14,7 @@ namespace KETTLE{
             typedef std::function<void()> ThreadFunc;
 
             Thread(ThreadFunc func);
-            ~Thread(){}
+            ~Thread();
 
             void start();
             void stop();

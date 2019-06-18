@@ -3,6 +3,7 @@
 #include "LoggerStream.h"
 #include"ThreadCondition.h"
 #include "LoggerFile.h"
+#include "CountDownLatch.h"
 
 AsynLog::AsynLog():
 _thread(std::bind(&AsynLog::thread_func,this)),
@@ -40,7 +41,7 @@ void AsynLog::thread_func(){
         }
 
         for(const auto& buffer : buffers)
-            _file->append(buffer->data,buffer->length);
+            _file->append(buffer->data(),buffer->length());
         
         if(!buffer1){
             buffer1 = std::move(buffers.back());

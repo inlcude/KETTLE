@@ -3,11 +3,11 @@
 
 #include "KETTLEPlatform.h"
 #include "Thread.h"
+#include"LoggerStream.h"
 
 using namespace KETTLE;
 namespace KETTLE{
 
-    class LargeLoggerStream;
     class LoggerFile;
 
 
