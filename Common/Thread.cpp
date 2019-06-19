@@ -37,4 +37,7 @@ void KETTLE::Thread::loop(){
 }
 
 void Thread::join(){
+    if(pthread_join(_tid,NULL) != 0)
+        LOG_FATA << "thread join failed,thread id:" << _tid << " reson:" << strerror(errno);
+
 }

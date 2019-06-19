@@ -54,6 +54,7 @@ namespace KETTLE{
 	typedef double            double64;
 	typedef int32             THREAD_HANDLE;
 	typedef uint32            THREAD_ID;
+	typedef long			  int48;
 
 }
 
