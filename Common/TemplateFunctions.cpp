@@ -19,7 +19,9 @@ std::string CommonFunction::GetAppName(){
     int rval = readlink("/proc/self/exe",path,sizeof(path)-1);
     if(rval <= -1)
         err_exit(errno,"readlink error");
+    LOG_INFO << "PAHT" << path;
     char* pch = strrchr(path,'/');
+    pch++;
     return std::string(pch);
 }
 

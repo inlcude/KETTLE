@@ -63,11 +63,10 @@ namespace KETTLE
 //////////////////////////////////////////////////////////////////
 	class AutoLock final{
 	public:
-        AutoLock(std::shared_ptr<ILock> mutex);
 		AutoLock(ILock* mutex);
 		~AutoLock();
 	private:
-		std::shared_ptr<ILock>   m_pLock;
+		ILock*  m_pLock;
 	};
 }
 

@@ -4,7 +4,9 @@
 #include "ThreadMutex.h"
 
 
-CountDownLatch::CountDownLatch(int32 count):countDown(count)
+CountDownLatch::CountDownLatch(int32 count):
+countDown(count),
+_mutex()
 ,_condition(new ThreadCondition(_mutex)){
 }
 

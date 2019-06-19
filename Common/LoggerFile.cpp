@@ -2,6 +2,7 @@
 #include"KETTLEPlatform.h"
 #include"TemplateFunctions.h"
 #include "LoggerFile.h"
+#include "Log.h"
 
 
 LoggerFile::LoggerFile(){
@@ -10,7 +11,9 @@ LoggerFile::LoggerFile(){
      *  YYYY_MMDD_HHMMSS_PROCESSNAME.log
      */
     snprintf(szFileName,128,"%s_%s.log",CommonFunction::now().c_str(),CommonFunction::GetAppName().c_str());
-    file = fopen(szFileName,"wa+");
+    file = fopen(szFileName,"a+");
+    if(!file)
+        LOG_FATA << "open faile error,filename= " << szFileName << " reson = " << strerror(errno);
 }
 
 void LoggerFile::flush(){

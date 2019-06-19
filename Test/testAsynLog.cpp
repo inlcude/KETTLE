@@ -4,13 +4,14 @@
 using namespace KETTLE;
 
 class TestAsynLog{
-    typedef std::unique_ptr<Thread>     ThreadPtr;
+    typedef std::shared_ptr<Thread>     ThreadPtr;
 public:
     TestAsynLog(){
         asynLog.start();
         threads.reserve(5);
         for(int32 i = 0; i < 5;++i){
-            threads[i].reset(new Thread(std::bind(&TestAsynLog::thread_func,this)));
+            threads.push_back(std::make_shared<Thread>(std::bind(&TestAsynLog::thread_func,this)));
+            //threads[i].reset(new Thread(std::bind(&TestAsynLog::thread_func,this)));
             threads[i]->start();
         }
     }
