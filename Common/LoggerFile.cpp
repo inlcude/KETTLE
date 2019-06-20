@@ -6,7 +6,7 @@
 
 
 
-LoggerFile::LoggerFile():writesize(0){
+LoggerFile::LoggerFile():_mutex(),writesize(0){
     rollFile();
 }
 
@@ -15,6 +15,7 @@ void LoggerFile::flush(){
 }
 
 void LoggerFile::append(const char* log,uint32 len){
+    AutoLock autolock(&_mutex);
     checkrollFile();
     uint32 nremain = len;
     while (nremain > 0){

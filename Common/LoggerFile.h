@@ -2,6 +2,7 @@
 #define __LOG_FILE_H__
 
 #include"KETTLEPlatform.h"
+#include"ThreadMutex.h"
 
 using namespace KETTLE;
 namespace KETTLE{
@@ -15,6 +16,7 @@ namespace KETTLE{
             void rollFile();
             void checkrollFile();
         private:
+            ThreadMutex                         _mutex;
             FILE*                               file;
             int64                               writesize;
             const static int32                  MAX_LOGFILE_SIZE = 500*1024*1024;
