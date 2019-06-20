@@ -31,6 +31,14 @@ namespace KETTLE{
                 append(szBuffer);
                 return *this;
             }
+
+            LoggerStream& operator<< (KETTLE::uint64 log){
+                char szBuffer[128] = {0};
+                snprintf(szBuffer,128,"%lld",log);
+                append(szBuffer);
+                return *this;
+            }
+
             LoggerStream& operator<< (KETTLE::int32 log){
                 char szBuffer[128] = {0};
                 snprintf(szBuffer,128,"%d",log);
@@ -69,6 +77,21 @@ namespace KETTLE{
                 char szBuffer[128] = {0};
                 snprintf(szBuffer,128,"%f",log);
                 append(szBuffer);
+                return *this;
+            }
+
+            LoggerStream& operator<< (long int log){
+                *this << static_cast<int64>(log);
+                return *this;
+            }
+
+            LoggerStream& operator<< (unsigned long int log){
+                *this << static_cast<uint64>(log);
+                return *this;
+            }
+
+            LoggerStream& operator<< (const std::string& log){
+                *this << log.c_str();
                 return *this;
             }
 

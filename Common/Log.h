@@ -17,13 +17,14 @@ void err_sys(const char*,...) __attribute__((noreturn));
 using namespace KETTLE;
 namespace KETTLE{
 
-
-
 #define LOG_INFO  Logger(Logger::KETTLE_LOGGER_LEVEL_INFO).Stream()
 #define LOG_TRACE Logger(Logger::KETTLE_LOGGER_LEVEL_TRACE).Stream()
 #define LOG_DEBUG Logger(Logger::KETTLE_LOGGER_LEVEL_DEBUG).Stream()
 #define LOG_ERROR Logger(Logger::KETTLE_LOGGER_LEVEL_ERROR).Stream()
 #define LOG_FATA  Logger(Logger::KETTLE_LOGGER_LEVEL_FATA).Stream()
+
+typedef void (*OutPutFunc)(const char* log,int len);
+typedef void (*FlushFunc)();
 
     class Logger{
 
@@ -36,11 +37,8 @@ namespace KETTLE{
                 KETTLE_LOGGER_LEVEL_FATA,
                 KETTLE_LOGGER_LEVEL_NUMS,
             };
-
-            typedef void (*OutPutFunc)(const char* log,int len);
-            typedef void (*FlushFunc)();
         public:
-            Logger(LogLevel level,OutPutFunc output_func = &Logger::DefaultWrite,FlushFunc flush_func = &Logger::DefaultFlush);
+            Logger(LogLevel level);
             ~Logger();
 
             DefaultLoggerStream&   Stream(){return stream;}
@@ -48,11 +46,14 @@ namespace KETTLE{
             static void DefaultWrite(const char* log,int len);
             static void DefaultFlush();
 
+            static void setOutPutFunc(OutPutFunc func){outfunc = func;}
+            static void setFlushFunc(FlushFunc func){flushfunc = func;}
+
         private:
             LogLevel                            logLevel;
             DefaultLoggerStream                 stream;
-            OutPutFunc                          outfunc;
-            FlushFunc                           flushfunc;
+            static OutPutFunc                   outfunc;
+            static FlushFunc                    flushfunc;
 
     };
 }

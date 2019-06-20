@@ -15,12 +15,6 @@ void KETTLE::KettleAllocate::deallocate(void* p){
 }
 
 
-
-
-
-
-
-
 /////////////////////////////////////////////////////////////
 #ifdef __USE_MEMPOOL__
 static KETTLE::KettleMemoryPool<> mempool;

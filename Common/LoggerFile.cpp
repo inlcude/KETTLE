@@ -5,7 +5,29 @@
 #include "Log.h"
 
 
-LoggerFile::LoggerFile(){
+
+LoggerFile::LoggerFile():writesize(0){
+    rollFile();
+}
+
+void LoggerFile::flush(){
+    ::fflush(file);
+}
+
+void LoggerFile::append(const char* log,uint32 len){
+    checkrollFile();
+    uint32 nremain = len;
+    while (nremain > 0){
+       size_t write_size = fwrite_unlocked(log,1,nremain,file);
+       nremain -= write_size;
+       if(nremain > 0)
+            log += write_size;
+    }
+
+    writesize += len;
+}
+
+void LoggerFile::rollFile(){
     char szFileName[128] = {0};
     /*
      *  YYYY_MMDD_HHMMSS_PROCESSNAME.log
@@ -16,19 +38,11 @@ LoggerFile::LoggerFile(){
         LOG_FATA << "open faile error,filename= " << szFileName << " reson = " << strerror(errno);
 }
 
-void LoggerFile::flush(){
-    fflush(file);
-}
-
-void LoggerFile::append(const char* log,uint32 len){
-    uint32 nremain = len;
-
-    while (nremain > 0){
-       size_t write_size = fwrite_unlocked(log,nremain,1,file);
-       nremain -= write_size;
-       if(nremain > 0)
-            log += write_size;
+void LoggerFile::checkrollFile(){
+    if(writesize >= MAX_LOGFILE_SIZE){
+        flush();
+        ::fclose(file);
+        rollFile();
+        writesize = 0;
     }
-    
-    flush();
 }

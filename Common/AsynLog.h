@@ -22,6 +22,7 @@ namespace KETTLE{
         void stop();
 
         void append(const char* log,int32 len);
+        void flush();
 
     protected:
         void thread_func();

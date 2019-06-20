@@ -83,7 +83,7 @@ void AsynLog::append(const char* log,int32 len){
     
     AutoLock lock(&_mutex);
     if(_currentbuffer->availd() > len)
-        *_currentbuffer << log << "\n";
+        *_currentbuffer << log;
     else{
         _buffers.push_back(std::move(_currentbuffer));
 
@@ -91,9 +91,10 @@ void AsynLog::append(const char* log,int32 len){
             _currentbuffer = std::move(_nextbuffer);
         else
             _currentbuffer.reset(new LargeLoggerStream());
-
-        *_currentbuffer << log << "\n";
         _condition->notify();
     }
+}
 
+void AsynLog::flush(){
+    _file->flush();
 }

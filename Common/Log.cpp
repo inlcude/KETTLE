@@ -96,11 +96,15 @@ static const char* LOGGER_LEVEL[] = {
     "LOG_FATA"
 };
 
-Logger::Logger(LogLevel level,OutPutFunc output_func,FlushFunc flush_func) : 
-logLevel(level),
-outfunc(output_func),
-flushfunc(flush_func){
-    stream << "[" << LOGGER_LEVEL[level] << "]" << "[" << std::string(std::move(CommonFunction::now())).c_str() << "]";
+OutPutFunc Logger::outfunc = Logger::DefaultWrite;
+FlushFunc Logger::flushfunc = Logger::DefaultFlush;
+
+
+Logger::Logger(LogLevel level) : 
+logLevel(level){
+    stream << "[" << LOGGER_LEVEL[level] << "]" << 
+    "[" << std::string(std::move(CommonFunction::now())) << "]"
+    << "[" << CommonFunction::GetSelfThreadId() << "]";
 }
 
 Logger::~Logger(){
