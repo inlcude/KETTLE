@@ -8,10 +8,13 @@ namespace KETTLE{
 	class TcpSocket{
 	public:
 		TcpSocket(bool block_mode);
-		~TcpSocket() {}
+		~TcpSocket();
 
-		bool                             	   SetKeepAlive();
-		const KETTLE::int32 GetSocket() const;
+
+		const KETTLE::int32 GetSocket() const{return _socket;}
+		void setKeepalive(bool bKeepalive);
+		void setNodelay(bool bNodelay);
+		
 	private:
 		sockaddr_in					     address;
 		KETTLE::int32                    _socket;
