@@ -5,20 +5,25 @@
 
 namespace KETTLE{
 	
+	using namespace KETTLE;
+	class InnetAddr;
 	class TcpSocket{
 	public:
-		TcpSocket(bool block_mode);
+		TcpSocket(int32 socket);
 		~TcpSocket();
 
 
 		const KETTLE::int32 GetSocket() const{return _socket;}
 		void setKeepalive(bool bKeepalive);
 		void setNodelay(bool bNodelay);
+		void setReuseAddress(bool bReuseAddress);
+		void bindAddress(const InnetAddr& address);
+		void listen();
+		int32 accpet(InnetAddr& address);
+		void shutdown();
 		
 	private:
-		sockaddr_in					     address;
-		KETTLE::int32                    _socket;
-		bool							 _block;
+		int32                    _socket;
 	};
 }
 

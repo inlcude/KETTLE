@@ -6,20 +6,23 @@
 #include"Channel.h"
 #include"InnetAddr.h"
 
+using namespace KETTLE;
 namespace KETTLE{
 
 	class Acceptor{
+		typedef std::function<void(int32,const InnetAddr& address)> HandleConnection;
 	public:
-		Acceptor(const char* ip,const KETTLE::uint16 port);
+		Acceptor(const InnetAddr& address,HandleConnection connection);
 		~Acceptor() {}
 
 		void read();
 		void write();
 		void error();
 	private:
-		std::unique_ptr<KETTLE::TcpSocket>     _listenSocket;
-		std::unique_ptr<KETTLE::InnetAddr> 		_addr;
-		std::shared_ptr<KETTLE::Channel> 		channel;
+		std::unique_ptr<TcpSocket>     _listenSocket;
+		std::unique_ptr<InnetAddr> 	   _addr;
+		std::shared_ptr<Channel> 		channel;
+		HandleConnection			   _connection;
 	};
 }
 

@@ -1,34 +1,13 @@
 #include "stdafx.h"
 #include "TcpSocket.h"
 #include "Log.h"
+#include "InnetAddr.h"
 
 using namespace KETTLE;
 
 
-KETTLE::TcpSocket::TcpSocket(bool block_mode)
-:_block(block_mode){
-	_socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-	if (_socket == -1)
-		LOG_FATA << "create socket failed，reason=" << strerror(errno);
-	
-	int reuse = 1;
-	if(::setsockopt(_socket,SOL_SOCKET,SO_REUSEADDR,&reuse,sizeof(reuse)) < 0)
-		LOG_FATA << "set socket reuseadder error,reason=" << strerror(errno);
-
-	if(::setsockopt(_socket,SOL_SOCKET,SO_REUSEPORT,&reuse,sizeof(reuse)) < 0)
-		LOG_FATA << "set socket reuseport error,reason=" << strerror(errno);
-		
-	if(block_mode){
-		int flags = ::fcntl(_socket, F_GETFL, 0);
-		flags |= O_NONBLOCK;
-		if(::fcntl(_socket, F_SETFL, flags) < 0)
-			LOG_FATA << "set non block error,reason=" << strerror(errno);
-
-		flags = ::fcntl(_socket, F_GETFD, 0);
-		flags |= FD_CLOEXEC;
-		if(::fcntl(_socket, F_SETFD, flags) < 0)
-			LOG_FATA << "set socket cloexec error,reason=" << strerror(errno);
-	}
+KETTLE::TcpSocket::TcpSocket(int32 socket)
+:_socket(socket){
 }
 
 TcpSocket::~TcpSocket(){
@@ -37,12 +16,47 @@ TcpSocket::~TcpSocket(){
 
 void TcpSocket::setKeepalive(bool bKeepalive){
 	int32 nKeepalive = bKeepalive ? 1:0;
-	if(::setsockopt(_socket,SOL_SOCKET,SO_KEEPALIVE,&bKeepalive,sizeof(nKeepalive)) != 0)
+	if(::setsockopt(_socket,SOL_SOCKET,SO_KEEPALIVE,
+	&bKeepalive,sizeof(nKeepalive)) != 0)
 		LOG_FATA << "setKeepalive error,reason = " << strerror(errno);
 }
 
 void TcpSocket::setNodelay(bool bNodelay){
 	int32 nNodelay = bNodelay ? 1 : 0;
-	if(::setsockopt(_socket,IPPROTO_TCP,TCP_NODELAY,&nNodelay,sizeof(nNodelay)) != 0)
+	if(::setsockopt(_socket,IPPROTO_TCP,TCP_NODELAY,
+	&nNodelay,sizeof(nNodelay)) != 0)
 		LOG_FATA << "setNodelay error,reason = " << strerror(errno);
+}
+
+void TcpSocket::setReuseAddress(bool bReuseAddress){
+	int32 nReuseAddress = bReuseAddress ? 1 : 0;
+	if(::setsockopt(_socket,SOL_SOCKET,SO_REUSEPORT,
+	&nReuseAddress,sizeof(nReuseAddress)) < 0)
+		LOG_FATA << "set socket reusepo TCP_NODESO_REUSEPORT error,reason=" 
+		<< strerror(errno);
+}
+
+void TcpSocket::bindAddress(const InnetAddr& address){
+	if(::bind(_socket,(sockaddr*)address.getAddr(),
+	sizeof(sockaddr_in)) != 0)
+		LOG_FATA << "bind socket error,reason:" << strerror(errno);
+}
+
+int32 TcpSocket::accpet(InnetAddr& address){
+	socklen_t nSize = sizeof(sockaddr_in);
+	int32 socketfd = ::accept(_socket,(sockaddr*)&address._addr,&nSize);
+	if(socketfd == -1)
+		LOG_ERROR << "accept error,reason=" << strerror(errno);
+
+	return socketfd;
+}
+
+void TcpSocket::shutdown(){
+	if(::shutdown(_socket,SHUT_WR) != 0)
+		LOG_ERROR << "shut down socket error,reason = " << strerror(errno);
+}
+
+void TcpSocket::listen(){
+	if(::listen(_socket,SOMAXCONN) != 0)
+		LOG_ERROR << "listen socket error,reason = " << strerror(errno);
 }

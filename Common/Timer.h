@@ -29,10 +29,10 @@ private:
     int         repeat_;
     CallBack    cb;
 
-    static std::atomic_ullong sequence;
+    static std::atomic_uint sequence;
 };
 
-std::atomic_ullong Timer::sequence(0);
+std::atomic_uint Timer::sequence(0);
 
 // don't use epoll ET model,please use epoll LT model;
 class TimerQuene{

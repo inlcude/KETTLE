@@ -29,6 +29,7 @@ void KETTLE::Thread::start(){
 
 void KETTLE::Thread::stop(){
     _running = false;
+    join();
 }
 
 void KETTLE::Thread::loop(){

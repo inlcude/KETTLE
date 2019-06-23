@@ -39,6 +39,8 @@
 #include<stdarg.h>
 #include<semaphore.h>
 #include<sys/timerfd.h>
+#include <netinet/tcp.h>
+#include<sys/uio.h>
 
 #pragma pack(push,1)
 namespace KETTLE{
