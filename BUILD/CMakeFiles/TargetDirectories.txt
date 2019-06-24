@@ -1,9 +1,0 @@
-/home/include/Documents/Server/BUILD/CMakeFiles/rebuild_cache.dir
-/home/include/Documents/Server/BUILD/CMakeFiles/edit_cache.dir
-/home/include/Documents/Server/BUILD/Server/CMakeFiles/rebuild_cache.dir
-/home/include/Documents/Server/BUILD/Server/CMakeFiles/Server.dir
-/home/include/Documents/Server/BUILD/Server/CMakeFiles/edit_cache.dir
-/home/include/Documents/Server/BUILD/Test/CMakeFiles/rebuild_cache.dir
-/home/include/Documents/Server/BUILD/Test/CMakeFiles/edit_cache.dir
-/home/include/Documents/Server/BUILD/Test/CMakeFiles/testlog.dir
-/home/include/Documents/Server/BUILD/Test/CMakeFiles/testAsynLog.dir
