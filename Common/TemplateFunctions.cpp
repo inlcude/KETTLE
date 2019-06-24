@@ -2,9 +2,8 @@
 #include"TemplateFunctions.h"
 #include "Log.h"
 
-using namespace KETTLE;
 
-void KETTLE::CommonFunction::FunctionSleep(int milsec)
+void CommonFunction::FunctionSleep(int32 milsec)
 {
 #if __WINDOWS__
     Sleep(milsec);
