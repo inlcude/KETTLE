@@ -5,10 +5,13 @@
 
 using namespace KETTLE;
 namespace KETTLE{
+    class EpollPoller;
+    class EventLoop;
     class Channel{
+
     public:
         typedef std::function<void()>        EventCallback;
-        Channel(int32 sockfd,EventCallback read_event
+        Channel(EventLoop* loop,int32 sockfd,EventCallback read_event
         ,EventCallback write_event
         ,EventCallback error_event);
 
@@ -16,9 +19,12 @@ namespace KETTLE{
         ~Channel();
 
         void handleEvent(int event);
-        int32 getSockfd(){return _sockfd;}
+        int32 getSockfd() const{return _sockfd;}
+        int32 getEvents() const {return _events;}
 
      private:
+        EventLoop*          _loop;
+        int32               _events;
         int32               _sockfd;
         EventCallback       _read;
         EventCallback       _write;

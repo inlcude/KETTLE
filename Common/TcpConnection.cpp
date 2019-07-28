@@ -1,12 +1,15 @@
 #include"stdafx.h"
 #include"TcpConnection.h"
 #include "InnetAddr.h"
+#include "EventLoop.h"
 
-TcpConnection::TcpConnection(int32 socket,const InnetAddr& localAddr,
-const InnetAddr& remoteAddr):_socket(new TcpSocket(socket)),
+TcpConnection::TcpConnection(EventLoop* loop,int32 socket,const InnetAddr& localAddr,
+const InnetAddr& remoteAddr):_loop(loop),_socket(new TcpSocket(socket)),
 _localAddress(new InnetAddr(localAddr)),
 _remoteAddress(new InnetAddr(remoteAddr)),
-_channel(new Channel(socket,std::bind(&TcpConnection::handlRead,this),std::bind(&TcpConnection::handlWrite,this),std::bind(&TcpConnection::handError,this))){
+_channel(new Channel(loop,socket,std::bind(&TcpConnection::handlRead,this)
+                    ,std::bind(&TcpConnection::handlWrite,this)
+                    ,std::bind(&TcpConnection::handError,this))){
 
 }
 
@@ -48,4 +51,5 @@ void TcpConnection::handlWrite(){
 
 void TcpConnection::handError(){
     _socket->shutdown();
+    _loop->removeChannel(_channel.get());
 }

@@ -12,10 +12,12 @@ namespace KETTLE{
         EventLoop();
         ~EventLoop();
 
-        void runInLoop(const Channel* channel);
+        void runInLoop(Channel* channel);
+        void removeChannel(Channel* channel);
         void exitInLoop(const char* Channel);
         void startLoop();
         void stopLoop();
+        void loop();
     private:
         bool            _running;
         std::unique_ptr<EpollPoller>        _poller;

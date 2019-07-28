@@ -10,7 +10,7 @@ namespace KETTLE{
     class InnetAddr;
     class TcpConnection{
         public:
-            TcpConnection(int32 socket,const InnetAddr& localAddr,
+            TcpConnection(EventLoop* loop,int32 socket,const InnetAddr& localAddr,
             const InnetAddr& remoteAddr);
             ~TcpConnection();
 
@@ -19,6 +19,7 @@ namespace KETTLE{
             void handError();
 
         private:
+            EventLoop*                      _loop;
             std::unique_ptr<TcpSocket>      _socket;
             std::unique_ptr<InnetAddr>      _localAddress;      // 我的地址
             std::unique_ptr<InnetAddr>      _remoteAddress;     // 对端地址

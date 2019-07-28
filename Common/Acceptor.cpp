@@ -9,7 +9,7 @@ _addr(new InnetAddr(address)),_connection(connection){
     if(sockfd < 0)
         LOG_FATA << "socket() error,reason" << strerror(errno);
 
-    channel = std::make_shared<KETTLE::Channel>(sockfd,std::bind(&Acceptor::read,this)
+    channel = std::make_shared<Channel>(sockfd,std::bind(&Acceptor::read,this)
     ,std::bind(&Acceptor::write,this)
     ,std::bind(&Acceptor::error,this));
 

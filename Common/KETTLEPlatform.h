@@ -8,6 +8,7 @@
 #include<atomic>
 #include<list>
 #include<vector>
+#include<map>
 
 #include<sys/types.h>
 #include<arpa/inet.h>
@@ -41,6 +42,7 @@
 #include<sys/timerfd.h>
 #include <netinet/tcp.h>
 #include<sys/uio.h>
+#include<sys/epoll.h>
 
 #pragma pack(push,1)
 namespace KETTLE{

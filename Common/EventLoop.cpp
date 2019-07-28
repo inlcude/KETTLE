@@ -11,17 +11,19 @@ EventLoop::~EventLoop(){
 
 }
 
-void EventLoop::runInLoop(const Channel* channel){
-
+void EventLoop::runInLoop(Channel* channel){
+    _poller->registerInPoller(channel);
 }
 
-void EventLoop::startLoop(){
-    
-    while(_running){
-
-    }
+void EventLoop::removeChannel(Channel* channel){
+    _poller->removeChannel(channel);
 }
-
 void EventLoop::stopLoop(){
 
+}
+
+void EventLoop::loop(){
+    while(_running){
+        _poller->poller();
+    }
 }
