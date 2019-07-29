@@ -1,4 +1,6 @@
 #include"TcpServer.h"
+#include"EventLoop.h"
+#include"Log.h"
 
 TcpServer::TcpServer(const char* ip,uint16 port)
 : _acceptor(new Acceptor(InnetAddr(ip,port),std::bind(&TcpServer::handlAccept,this,std::placeholders::_1,std::placeholders::_2))),_running(false)
@@ -21,10 +23,15 @@ void TcpServer::start(){
 
 void TcpServer::handlAccept(int32 sockfd,const InnetAddr& address){
     
-    TcpConnectionPtr connection = std::make_shared<TcpConnection>(sockfd,_address.get(),address);
+    TcpConnectionPtr connection = std::make_shared<TcpConnection>(_eventLoop.get(),sockfd,_address.get(),address);
     if(_connectionHashMap.find(sockfd) != _connectionHashMap.end())
         _connectionHashMap[sockfd] = connection;
     else
         _connectionHashMap.insert(std::make_pair(sockfd,connection));
+
+    _eventLoop->runInLoop(connection->getChannel());
+
+    LOG_TRACE << "remote address connected,ip:" << connection->getRemoteAddress().getIP()
+    << " port:" << connection->getRemoteAddress().getPort();
     
 }

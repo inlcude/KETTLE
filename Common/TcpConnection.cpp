@@ -53,3 +53,8 @@ void TcpConnection::handError(){
     _socket->shutdown();
     _loop->removeChannel(_channel.get());
 }
+
+void TcpConnection::WriteData(const char* buffer,size_t nSize){
+    // need lock?
+    _writeBuffer->append(buffer,nSize);
+}

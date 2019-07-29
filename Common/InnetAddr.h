@@ -16,11 +16,11 @@ namespace KETTLE{
 
         const uint16    getPort() const {return _port;}
         const sockaddr_in*             getAddr() const;
-        const char* getIP();
+        const char* getIP() const;
 
         InnetAddr& operator=(const sockaddr_in& address);
         const struct sockaddr_in* getSockaddrin(){return &_addr;}
-        uint16 getPort(){return _addr.sin_port;}
+        uint16 getPort() {return _addr.sin_port;}
     private:
         struct sockaddr_in    _addr;
         uint16        _port;

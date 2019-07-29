@@ -14,10 +14,14 @@ namespace KETTLE{
             const InnetAddr& remoteAddr);
             ~TcpConnection();
 
+            Channel* getChannel() const {return _channel.get();}
+            const InnetAddr& getRemoteAddress() const {return *(_remoteAddress.get());}
+
+            void WriteData(const char* buffer,size_t nSize);
+        protected:
             void handlRead();
             void handlWrite();
             void handError();
-
         private:
             EventLoop*                      _loop;
             std::unique_ptr<TcpSocket>      _socket;
