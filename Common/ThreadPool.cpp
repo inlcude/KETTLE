@@ -17,5 +17,25 @@ void ThreadPool::start(){
 }
 
 void ThreadPool::thread_func(){
+    while(_running){
+        AutoLock autoLock(&_mutex);
+        _condition->wait();
+        Task task(take());
+        task();
+    }
+}
 
+ThreadPool::Task ThreadPool::take(){
+    AutoLock autoLock(&_mutex);
+
+    Task task = _taskDeque.front();
+    _taskDeque.pop_front();
+    return task;
+}
+
+void ThreadPool::runInThread(Task task){
+    AutoLock autoLock(&_mutex);
+
+    _taskDeque.push_back(task);
+    _condition->notify();
 }

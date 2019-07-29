@@ -9,6 +9,7 @@
 #include<list>
 #include<vector>
 #include<map>
+#include<deque>
 
 #include<sys/types.h>
 #include<arpa/inet.h>
