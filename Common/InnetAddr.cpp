@@ -32,6 +32,6 @@ InnetAddr& InnetAddr::operator=(const sockaddr_in& address){
     return *this;
 }
 
-const char* InnetAddr::getIP(){
+const char* InnetAddr::getIP() const{
     return inet_ntoa(_addr.sin_addr);
 }

@@ -10,9 +10,9 @@ using namespace KETTLE;
 namespace KETTLE{
 
 	class Acceptor{
-		typedef std::function<void(int32,const InnetAddr& address)> HandleConnection;
 	public:
-		Acceptor(const InnetAddr& address,HandleConnection connection);
+		typedef std::function<void(int32,const InnetAddr& address)> HandleConnection;
+		Acceptor(EventLoop* loop,const InnetAddr& address,HandleConnection connection);
 		~Acceptor() {}
 
 		void read();
@@ -23,6 +23,7 @@ namespace KETTLE{
 		std::unique_ptr<InnetAddr> 	   _addr;
 		std::shared_ptr<Channel> 		channel;
 		HandleConnection			   _connection;
+		EventLoop*					   _loop;
 	};
 }
 

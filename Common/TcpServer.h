@@ -6,6 +6,7 @@
 #include"Thread.h"
 #include"TcpConnection.h"
 #include"EventLoop.h"
+#include"ThreadEventPool.h"
 
 using namespace KETTLE;
 namespace KETTLE{
@@ -15,21 +16,21 @@ namespace KETTLE{
         typedef std::unordered_map<int32,TcpConnectionPtr>::const_iterator CTC_ITER;
         typedef std::unordered_map<int32,TcpConnectionPtr>::iterator        TC_ITER;
     public:
-        TcpServer(const char* ip,uint16 port);
+        TcpServer(const char* ip,uint16 port,int32 threadNum);
         ~TcpServer();
 
         void start();
 
-        void mainLoop();
-        void subLoop();
     protected:
         void handlAccept(int32 sockfd,const InnetAddr& address);
+        void loop();
     private:
-        std::unique_ptr<Acceptor>       _acceptor;
         bool                            _running;
-        std::unique_ptr<InnetAddr>      _address;
-        ConnectionHashMap               _connectionHashMap;
         std::shared_ptr<EventLoop>      _eventLoop;
+        std::unique_ptr<InnetAddr>      _address;
+        std::unique_ptr<Acceptor>       _acceptor;
+        ConnectionHashMap               _connectionHashMap;
+        std::unique_ptr<ThreadEventPool> _eventPool;
     };
 }
 #endif

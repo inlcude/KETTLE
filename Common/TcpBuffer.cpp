@@ -20,7 +20,7 @@ void TcpBuffer::dilatation(int32 writeSize){
         _buffer.resize(writeIndex + writeSize);
     }
     else{
-        std::copy(readIndex,writeIndex,peek());
+        std::copy(_buffer.begin()+readIndex,_buffer.begin()+ writeIndex,_buffer.begin());
         uint32 write_offset = dataSize();
         readIndex = 0;
         writeIndex = write_offset;

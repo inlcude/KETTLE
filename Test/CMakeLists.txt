@@ -15,3 +15,9 @@ set(SRC_LIST
 	${COMMON_SRC}
 	${GPERFTOOLS_SRC})
 add_executable(testAsynLog ${SRC_LIST})
+
+set(SRC_LIST
+    testTcpServer.cpp
+	${COMMON_SRC}
+	${GPERFTOOLS_SRC})
+add_executable(testTcpServer ${SRC_LIST})

@@ -2,14 +2,16 @@
 #include"Log.h"
 #include "TcpSocket.h"
 
-KETTLE::Acceptor::Acceptor(const InnetAddr& address,HandleConnection connection):
-_addr(new InnetAddr(address)),_connection(connection){
+Acceptor::Acceptor(EventLoop* loop,const InnetAddr& address,HandleConnection connection):
+_loop(loop)
+,_addr(new InnetAddr(address))
+,_connection(connection){
 
     int32 sockfd = ::socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
     if(sockfd < 0)
         LOG_FATA << "socket() error,reason" << strerror(errno);
 
-    channel = std::make_shared<Channel>(sockfd,std::bind(&Acceptor::read,this)
+    channel = std::make_shared<Channel>(loop,sockfd,std::bind(&Acceptor::read,this)
     ,std::bind(&Acceptor::write,this)
     ,std::bind(&Acceptor::error,this));
 
@@ -17,7 +19,7 @@ _addr(new InnetAddr(address)),_connection(connection){
     _listenSocket->listen();
 }
 
-void KETTLE::Acceptor::read(){
+void Acceptor::read(){
     InnetAddr address;
     int32 sockfd = _listenSocket->accpet(address);
     if(sockfd < 0)
@@ -27,10 +29,10 @@ void KETTLE::Acceptor::read(){
     
 }
 
-void KETTLE::Acceptor::write(){
+void Acceptor::write(){
 
 }
 
-void KETTLE::Acceptor::error(){
+void Acceptor::error(){
 
 }

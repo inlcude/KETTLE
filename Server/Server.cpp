@@ -12,8 +12,5 @@ using namespace KETTLE;
 using namespace std;
 
 int main(){
-
-	KETTLE::Acceptor* acceptor = new Acceptor("0.0.0.0",9527);
-
 	return 0;
 }

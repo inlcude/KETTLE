@@ -16,7 +16,7 @@ _epollfd(::epoll_create(INIT_DEFAULT_EVENTS_SIZE)){
 }
 
 void EpollPoller::registerInPoller(Channel* channel){
-    _channelList[channel->getSockfd] = channel;
+    _channelList[channel->getSockfd()] = channel;
     updateChannel(EO_ADD,channel);
 }
 
