@@ -11,6 +11,8 @@ _loop(loop)
     if(sockfd < 0)
         LOG_FATA << "socket() error,reason" << strerror(errno);
 
+    _listenSocket.reset(new TcpSocket(sockfd));
+
     channel = std::make_shared<Channel>(loop,sockfd,std::bind(&Acceptor::read,this)
     ,std::bind(&Acceptor::write,this)
     ,std::bind(&Acceptor::error,this));

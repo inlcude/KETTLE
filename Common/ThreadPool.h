@@ -1,6 +1,8 @@
 #ifndef __THREAD_POOL_H__
 #define __THREAD_POOL_H__
 #include "KETTLEPlatform.h"
+#include "ThreadMutex.h"
+#include "ThreadCondition.h"
 
 using namespace KETTLE;
 namespace KETTLE{

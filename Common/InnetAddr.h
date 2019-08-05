@@ -20,7 +20,7 @@ namespace KETTLE{
 
         InnetAddr& operator=(const sockaddr_in& address);
         const struct sockaddr_in* getSockaddrin(){return &_addr;}
-        uint16 getPort() {return _addr.sin_port;}
+        uint16 getPort() {return _port;}
     private:
         struct sockaddr_in    _addr;
         uint16        _port;

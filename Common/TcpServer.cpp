@@ -4,7 +4,7 @@
 
 TcpServer::TcpServer(const char* ip,uint16 port,int32 threadNum)
 :_eventLoop(new EventLoop()) 
-,_acceptor(new Acceptor(_eventPool.get()
+,_acceptor(new Acceptor(_eventLoop.get()
                         ,*(_address.get())
                         ,std::bind(&TcpServer::handlAccept
                                     ,this
@@ -15,6 +15,10 @@ TcpServer::TcpServer(const char* ip,uint16 port,int32 threadNum)
 ,_eventPool(new ThreadEventPool(threadNum)){
 }
 
+TcpServer::~TcpServer(){
+
+}
+
 void TcpServer::loop(){
     while(_running){
         // dothing;
@@ -23,6 +27,7 @@ void TcpServer::loop(){
 }
 
 void TcpServer::start(){
+    LOG_INFO << "Tcp server start,listen on " << _address->getIP() << " listen on port:" << _address->getPort();
     _running = true;
     _eventPool->start();
     loop();
