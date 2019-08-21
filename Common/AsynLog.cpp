@@ -91,6 +91,7 @@ void AsynLog::append(const char* log,int32 len){
             _currentbuffer = std::move(_nextbuffer);
         else
             _currentbuffer.reset(new LargeLoggerStream());
+        *_currentbuffer << log;
         _condition->notify();
     }
 }
