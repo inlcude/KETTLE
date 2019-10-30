@@ -81,9 +81,9 @@ bool KETTLE::ProcessMutex::UnLock() {
 }
 ////////////////////////////////////////////////////////////////////
 KETTLE::ProcessSem::ProcessSem(const char* sem_name) : _sem_name(sem_name),_sem(nullptr){
-    _sem = sem_open(sem_name,O_CREAT|O_EXCL,S_IRUSR|S_IWUSR|S_IROTH,1);
+    _sem = sem_open(_sem_name.c_str(),O_CREAT|O_EXCL,S_IRUSR|S_IWUSR|S_IROTH,1);
     if(_sem == SEM_FAILED){
-        _sem = sem_open("shared_sem",O_CREAT,S_IRUSR|S_IWUSR|S_IROTH);
+        _sem = sem_open(_sem_name.c_str(),O_CREAT,S_IRUSR|S_IWUSR|S_IROTH);
         if(_sem == SEM_FAILED)
             err_exit(errno,"create sem failed");
     }
