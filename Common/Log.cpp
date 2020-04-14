@@ -105,6 +105,9 @@ logLevel(level){
     stream << "[" << LOGGER_LEVEL[level] << "]" << 
     "[" << std::string(std::move(CommonFunction::now())) << "]"
     << "[" << CommonFunction::GetSelfThreadId() << "]";
+
+    if(level == KETTLE_LOGGER_LEVEL_FATA)
+        ::exit(1);
 }
 
 Logger::~Logger(){

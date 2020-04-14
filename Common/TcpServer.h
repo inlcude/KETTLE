@@ -20,16 +20,19 @@ namespace KETTLE{
         ~TcpServer();
 
         void start();
+        void exit();
 
     protected:
         void handlAccept(int32 sockfd,const InnetAddr& address);
         void loop();
     private:
         bool                            _running;
+        // main pool
         std::shared_ptr<EventLoop>      _eventLoop;
         std::unique_ptr<InnetAddr>      _address;
         std::unique_ptr<Acceptor>       _acceptor;
         ConnectionHashMap               _connectionHashMap;
+        // mt event pool
         std::unique_ptr<ThreadEventPool> _eventPool;
     };
 }

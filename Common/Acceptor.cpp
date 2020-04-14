@@ -12,6 +12,7 @@ _loop(loop)
         LOG_FATA << "socket() error,reason" << strerror(errno);
 
     _listenSocket.reset(new TcpSocket(sockfd));
+    _listenSocket->setReuseAddress(true);
 
     channel = std::make_shared<Channel>(loop,sockfd,std::bind(&Acceptor::read,this)
     ,std::bind(&Acceptor::write,this)

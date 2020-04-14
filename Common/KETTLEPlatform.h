@@ -45,6 +45,7 @@
 #include <netinet/tcp.h>
 #include<sys/uio.h>
 #include<sys/epoll.h>
+#include<sys/ioctl.h>
 
 #pragma pack(push,1)
 namespace KETTLE{

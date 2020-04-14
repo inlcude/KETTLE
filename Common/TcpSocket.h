@@ -19,6 +19,7 @@ namespace KETTLE{
 		void setReuseAddress(bool bReuseAddress);
 		void bindAddress(const InnetAddr& address);
 		void listen();
+		void setNonblock(bool bNonblock);
 		int32 accpet(InnetAddr& address);
 		void shutdown();
 		
