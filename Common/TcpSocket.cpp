@@ -36,6 +36,11 @@ void TcpSocket::setReuseAddress(bool bReuseAddress){
 		<< strerror(errno);
 }
 
+void TcpSocket::setNonblock(bool bNonblock){
+	if(::ioctl(_socket,FIONBIO,&bNonblock) != 0)
+		LOG_FATA << "set socket nonblock error" << ::strerror(errno);
+}
+
 void TcpSocket::bindAddress(const InnetAddr& address){
 	if(::bind(_socket,(sockaddr*)address.getAddr(),
 	sizeof(sockaddr_in)) != 0)

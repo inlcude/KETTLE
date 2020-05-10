@@ -7,19 +7,19 @@ KETTLE::ThreadMutex::ThreadMutex():mutex(PTHREAD_MUTEX_INITIALIZER){
 }
 
 KETTLE::ThreadMutex::~ThreadMutex(){
-    pthread_mutex_destroy(&mutex);
+    ::pthread_mutex_destroy(&mutex);
 }
 
 bool KETTLE::ThreadMutex::Lock(){
 	int pthread_err = 0;
-	if((pthread_err = pthread_mutex_lock(&mutex)) != 0){
+	if((pthread_err = ::pthread_mutex_lock(&mutex)) != 0){
 		err_exit(pthread_err,"pthread mutex lock failed");
 	}
 }
 
 bool KETTLE::ThreadMutex::UnLock(){
 	int pthread_err = 0;
-	if((pthread_err = pthread_mutex_unlock(&mutex)) != 0)
+	if((pthread_err = ::pthread_mutex_unlock(&mutex)) != 0)
 		err_exit(pthread_err,"mutex unlock failed");
     return true;
 }
