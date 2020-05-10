@@ -1,6 +1,7 @@
 #include"Acceptor.h"
 #include"Log.h"
 #include "TcpSocket.h"
+#include "EventLoop.h"
 
 Acceptor::Acceptor(EventLoop* loop,const InnetAddr& address,HandleConnection connection):
 _loop(loop)
@@ -17,8 +18,11 @@ _loop(loop)
     ,std::bind(&Acceptor::write,this)
     ,std::bind(&Acceptor::error,this));
 
+    channel->
+
     _listenSocket->bindAddress(*(_addr.get()));
     _listenSocket->listen();
+    _loop->runInLoop(channel.get());
 }
 
 void Acceptor::read(){
@@ -37,4 +41,8 @@ void Acceptor::write(){
 
 void Acceptor::error(){
 
+}
+
+Channel* Acceptor::get_channel(){
+    return channel.get();
 }

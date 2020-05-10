@@ -20,14 +20,13 @@ TcpServer::~TcpServer(){
 }
 
 void TcpServer::loop(){
-    while(_running){
-        // dothing;
-        _eventLoop->loop();
-    }
+    // dothing;
+    _eventLoop->loop();
 }
 
 void TcpServer::start(){
     LOG_INFO << "Tcp server start,listen on " << _address->getIP() << " listen on port:" << _address->getPort();
+    _eventLoop->runInLoop(_acceptor->get_channel());
     _running = true;
     _eventPool->start();
     loop();

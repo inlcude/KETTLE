@@ -10,6 +10,10 @@ KETTLE::Channel::Channel(EventLoop* loop,int32 sockfd
         ,_read(read_event)
         ,_write(write_event)
         ,_error(write_event){
+            _events = 
+
+
+            
 
         }
 

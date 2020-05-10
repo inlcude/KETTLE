@@ -18,6 +18,7 @@ namespace KETTLE{
 		void read();
 		void write();
 		void error();
+		Channel* get_channel();
 	private:
 		std::unique_ptr<TcpSocket>     _listenSocket;
 		std::unique_ptr<InnetAddr> 	   _addr;
