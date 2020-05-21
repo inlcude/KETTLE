@@ -21,6 +21,7 @@ namespace KETTLE{
         void handleEvent(int event);
         int32 getSockfd() const{return _sockfd;}
         int32 getEvents() const {return _events;}
+        void setEvens(int events);
 
      private:
         EventLoop*          _loop;

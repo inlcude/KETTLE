@@ -22,8 +22,10 @@ void EpollPoller::registerInPoller(Channel* channel){
 
 void EpollPoller::removeChannel(Channel* channel){
     ItrChannel itr = _channelList.find(channel->getSockfd());
-    if(itr != _channelList.end())
+    if(itr != _channelList.end()){
+        updateChannel(EO_DEL,channel);
         _channelList.erase(itr);
+    }
 }
 
 void EpollPoller::updateChannel(EO_EVENTS operation,Channel* channel){
@@ -40,6 +42,12 @@ void EpollPoller::updateChannel(EO_EVENTS operation,Channel* channel){
 
     if(::epoll_ctl(_epollfd,op,sockfd,&e_event) != 0)
         LOG_FATA << "cpoll_ctl failed,reason:" << strerror(errno);
+}
+
+void EpollPoller::updateChannel(Channel* channel){
+    ItrChannel itr = _channelList.find(channel->getSockfd());
+    if(itr != _channelList.end())
+        updateChannel(EO_MOD,channel);
 }
 
 void EpollPoller::poller(){

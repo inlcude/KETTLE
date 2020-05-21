@@ -41,12 +41,20 @@ void TcpConnection::handlRead(){
 }
 
 void TcpConnection::handlWrite(){
-    ssize_t nWriteSize = ::send(_socket->GetSocket(),_writeBuffer->data(),_writeBuffer->dataSize(),0);
-    if(nWriteSize > 0)
-        _writeBuffer->readData(nWriteSize);
-    else{
-        handError();
+
+    KETTLE::uint32 dataSize = _writeBuffer->dataSize();
+    if(dataSize){
+        ssize_t nWriteSize = ::send(_socket->GetSocket(),_writeBuffer->data(),_writeBuffer->dataSize(),0);
+        if(nWriteSize > 0)
+            _writeBuffer->readData(nWriteSize);
+        else
+            handError();
+    }else{
+        // if dataSzie == 0 then reset event
+        _channel->setEvens(EPOLLIN|EPOLLET);
+        _loop->updateChannel(_channel.get());
     }
+    
 }
 
 void TcpConnection::handError(){
@@ -57,4 +65,7 @@ void TcpConnection::handError(){
 void TcpConnection::WriteData(const char* buffer,size_t nSize){
     // need lock?
     _writeBuffer->append(buffer,nSize);
+
+    _channel->setEvens(EPOLLOUT|EPOLLIN|EPOLLET);
+    _loop->updateChannel(_channel.get());
 }
