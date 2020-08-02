@@ -8,6 +8,8 @@ using namespace KETTLE;
 namespace KETTLE{
     class EpollPoller;
     class EventLoop{
+
+        typedef std::function<void()> FUNCTOR;
         
     public:
         EventLoop();
@@ -17,6 +19,7 @@ namespace KETTLE{
         void runInLoop(std::function<void()>);
         void removeChannel(Channel* channel);
         void exitInLoop(const char* Channel);
+        void updateChannel(Channel* channel);
         void startLoop();
         void stopLoop();
         void loop();
@@ -26,12 +29,14 @@ namespace KETTLE{
         void handError();
         void wakeUp();
     private:
-        bool            _running;
-        std::unique_ptr<EpollPoller>            _poller;
-        std::vector<std::function<void()>>      _functors;
-        ThreadMutex     _mutex;
-        int32                         _eventfd
-        std::unique_ptr<Channel>                _eventChannel;
+
+        std::unique_ptr<EpollPoller>        _poller;
+        ThreadMutex                         _mutex;
+        int32                               _eventfd
+        std::unique_ptr<Channel>            _eventChannel;
+        std::atomic<bool>                   _running;
+        std::unique_ptr<EpollPoller>        _poller;
+        std::vector<FUNCTOR>                _functors;
     };
 }
 

@@ -105,6 +105,23 @@ bool KETTLE::ProcessSem::UnLock(){
 }
 ////////////////////////////////////////////////////////////////////
 
+KETTLE::AtomLock::AtomLock(){
+
+}
+
+KETTLE::AtomLock::~AtomLock(){
+
+}
+
+bool KETTLE::AtomLock::Lock(){
+	return true;
+}
+
+bool KETTLE::AtomLock::UnLock(){
+	return true;
+}
+////////////////////////////////////////////////////////////////////
+
 AutoLock::AutoLock(ILock* mutex):m_pLock(mutex){
 	m_pLock->Lock();
 }

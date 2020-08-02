@@ -21,6 +21,7 @@ namespace KETTLE{
         void removeChannel(Channel* Channel);
         void poller();
         void updateChannel(EO_EVENTS operation,Channel* channel);
+        void updateChannel(Channel* channel);
     private:
         int32                         _epollfd;
         ChannelList                   _channelList;

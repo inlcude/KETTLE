@@ -41,6 +41,7 @@ void TcpConnection::handlRead(){
 }
 
 void TcpConnection::handlWrite(){
+<<<<<<< HEAD
     // if use LT mode ,and writebuff is empty ,need remove epollwriteevent
 
     if(_writeBuffer->dataSize() == 0){
@@ -54,6 +55,22 @@ void TcpConnection::handlWrite(){
         }
     }
 
+=======
+
+    KETTLE::uint32 dataSize = _writeBuffer->dataSize();
+    if(dataSize){
+        ssize_t nWriteSize = ::send(_socket->GetSocket(),_writeBuffer->data(),_writeBuffer->dataSize(),0);
+        if(nWriteSize > 0)
+            _writeBuffer->readData(nWriteSize);
+        else
+            handError();
+    }else{
+        // if dataSzie == 0 then reset event
+        _channel->setEvens(EPOLLIN|EPOLLET);
+        _loop->updateChannel(_channel.get());
+    }
+    
+>>>>>>> c05ae955190d5fd615461b8474bc67aaea693cb2
 }
 
 void TcpConnection::handError(){
@@ -65,7 +82,12 @@ void TcpConnection::WriteData(const char* buffer,size_t nSize){
     // need lock?
     _writeBuffer->append(buffer,nSize);
 
+<<<<<<< HEAD
 }
 void TcpConnection::connectDestroy(){
 
+=======
+    _channel->setEvens(EPOLLOUT|EPOLLIN|EPOLLET);
+    _loop->updateChannel(_channel.get());
+>>>>>>> c05ae955190d5fd615461b8474bc67aaea693cb2
 }

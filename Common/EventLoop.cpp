@@ -6,9 +6,10 @@ EventLoop::EventLoop():_running(false),
 _poller(new EpollPoller())
 ,_eventfd(::eventfd(0,EFD_CLOEXEC|EFD_NONBLOCK))
 ,_eventChannel(new Channel(_eventfd
-,std::bind(&EventLoop::handRead,this)
-,std::bind(&EventLoop::handWrite,this)
-.std::bind(&EventLoop::handError,this)))
+                            ,std::bind(&EventLoop::handRead,this)
+                            ,std::bind(&EventLoop::handWrite,this)
+                            ,std::bind(&EventLoop::handError,this)))
+
 {
     _poller->runInLoop(_eventChannel.get());
 }
@@ -29,8 +30,14 @@ void EventLoop::startLoop(){
 
 }
 
-void EventLoop::stopLoop(){
 
+void EventLoop::updateChannel(Channel* channel)
+{
+    _poller->updateChannel(channel);
+}
+
+void EventLoop::stopLoop(){
+    _running = false;
 }
 
 void EventLoop::runInLoop(std::function<void()> functor){
@@ -48,12 +55,14 @@ void EventLoop::wakeUp(){
         LOG_FATA << "EventLoop::wakeUp error,reason" << ::strerror(errno);
 }
 
+void EventLoop::startLoop(){
+
+}
 void EventLoop::loop(){
     while(_running){
         _poller->poller();
 
         std::vector<std::function<void()>> temp;
-
         {
             AutoLock autoLock(&_mutex);
             temp.swap(_functors);
@@ -62,4 +71,16 @@ void EventLoop::loop(){
         for(auto& it : temp)
             it();
     }
+}
+
+void EventLoop::handRead(){
+
+}
+
+void EventLoop::handWrite(){
+
+}
+
+void EventLoop::handError(){
+
 }

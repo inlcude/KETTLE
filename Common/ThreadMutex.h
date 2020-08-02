@@ -47,6 +47,7 @@ namespace KETTLE
 			pthread_mutex_t* mutex; 
 	};
 //////////////////////////////////////////////////////////////////
+	// 
 	class ProcessSem final : public ILock{
 		public:
 			ProcessSem(const char* sem_name);
@@ -59,11 +60,14 @@ namespace KETTLE
 			std::string _sem_name;
 	};
 //////////////////////////////////////////////////////////////////
+	// 
 	class AtomLock final : public ILock{
 		public:
-			AtomLock(){
-				
-			}
+			AtomLock();
+			~AtomLock();
+		public:
+			virtual bool Lock() override final;
+			virtual bool UnLock() override final;
 	};
 
 //////////////////////////////////////////////////////////////////

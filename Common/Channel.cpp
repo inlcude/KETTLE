@@ -1,4 +1,5 @@
 #include"Channel.h"
+#include "EventLoop.h"
 
 
 KETTLE::Channel::Channel(EventLoop* loop,int32 sockfd
@@ -22,4 +23,10 @@ void KETTLE::Channel::handleEvent(int event){
         _write();
     if(event & EPOLLERR)
         _error();
+}
+
+void KETTLE::Channel::setEvens(int events)
+{
+    _events = events;
+    _loop->updateChannel(this);
 }
