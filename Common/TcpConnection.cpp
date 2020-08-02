@@ -41,12 +41,19 @@ void TcpConnection::handlRead(){
 }
 
 void TcpConnection::handlWrite(){
-    ssize_t nWriteSize = ::send(_socket->GetSocket(),_writeBuffer->data(),_writeBuffer->dataSize(),0);
-    if(nWriteSize > 0)
-        _writeBuffer->readData(nWriteSize);
-    else{
-        handError();
+    // if use LT mode ,and writebuff is empty ,need remove epollwriteevent
+
+    if(_writeBuffer->dataSize() == 0){
     }
+    else
+        ssize_t nWriteSize = ::send(_socket->GetSocket(),_writeBuffer->data(),_writeBuffer->dataSize(),0);
+        if(nWriteSize > 0)
+            _writeBuffer->readData(nWriteSize);
+        else{
+            handError();
+        }
+    }
+
 }
 
 void TcpConnection::handError(){
@@ -57,4 +64,8 @@ void TcpConnection::handError(){
 void TcpConnection::WriteData(const char* buffer,size_t nSize){
     // need lock?
     _writeBuffer->append(buffer,nSize);
+
+}
+void TcpConnection::connectDestroy(){
+
 }

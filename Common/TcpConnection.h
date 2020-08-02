@@ -18,6 +18,10 @@ namespace KETTLE{
             const InnetAddr& getRemoteAddress() const {return *(_remoteAddress.get());}
 
             void WriteData(const char* buffer,size_t nSize);
+
+            EventLoop* getLoop() {return _loop;}
+
+            void connectDestroy();
         protected:
             void handlRead();
             void handlWrite();

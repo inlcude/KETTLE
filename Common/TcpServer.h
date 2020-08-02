@@ -24,6 +24,7 @@ namespace KETTLE{
 
     protected:
         void handlAccept(int32 sockfd,const InnetAddr& address);
+        void handleRemoveConnection(TcpConnectionPtr connection);
         void loop();
     private:
         bool                            _running;

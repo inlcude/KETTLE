@@ -19,8 +19,6 @@ _loop(loop)
     ,std::bind(&Acceptor::write,this)
     ,std::bind(&Acceptor::error,this));
 
-    channel->
-
     _listenSocket->bindAddress(*(_addr.get()));
     _listenSocket->listen();
     _loop->runInLoop(channel.get());

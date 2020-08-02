@@ -55,7 +55,9 @@ private:
     TimerContainer      container_;
     int curslot;
     static const int Time_Inerval = 100;
-    static const int Time_Wheel = 10;       
+    static const int Time_Wheel = 10;
+
+    EventLoop*        _channel;
 };
 
 const int TimerQuene::Time_Inerval;

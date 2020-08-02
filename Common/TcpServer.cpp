@@ -47,3 +47,7 @@ void TcpServer::handlAccept(int32 sockfd,const InnetAddr& address){
     << " port:" << connection->getRemoteAddress().getPort();
     
 }
+
+void TcpServer::handleRemoveConnection(TcpConnectionPtr connection){
+    EventLoop* loop = connection->getLoop();
+}
