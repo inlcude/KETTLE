@@ -46,6 +46,7 @@
 #include<sys/uio.h>
 #include<sys/epoll.h>
 #include<sys/ioctl.h>
+#include<sys/eventfd.h>
 
 #pragma pack(push,1)
 namespace KETTLE{

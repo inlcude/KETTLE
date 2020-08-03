@@ -1,17 +1,21 @@
 #include "stdafx.h"
+#include "KETTLEPlatform.h"
 #include "EventLoop.h"
 #include "EpollPoller.h"
+#include "Log.h"
+#include "Channel.h"
 
 EventLoop::EventLoop():_running(false),
 _poller(new EpollPoller())
 ,_eventfd(::eventfd(0,EFD_CLOEXEC|EFD_NONBLOCK))
-,_eventChannel(new Channel(_eventfd
+,_eventChannel(new Channel( this
+                            ,_eventfd
                             ,std::bind(&EventLoop::handRead,this)
                             ,std::bind(&EventLoop::handWrite,this)
                             ,std::bind(&EventLoop::handError,this)))
 
 {
-    _poller->runInLoop(_eventChannel.get());
+    _poller->registerInPoller(_eventChannel.get());
 }
 
 EventLoop::~EventLoop(){

@@ -16,6 +16,7 @@ void TcpBuffer::append(const char* stream,int32 lenth){
 }
 
 void TcpBuffer::dilatation(int32 writeSize){
+
     if(space() < writeSize){
         _buffer.resize(writeIndex + writeSize);
     }

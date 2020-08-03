@@ -32,7 +32,7 @@ namespace KETTLE{
 
         std::unique_ptr<EpollPoller>        _poller;
         ThreadMutex                         _mutex;
-        int32                               _eventfd
+        int32                               _eventfd;
         std::unique_ptr<Channel>            _eventChannel;
         std::atomic<bool>                   _running;
         std::unique_ptr<EpollPoller>        _poller;

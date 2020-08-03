@@ -9,9 +9,14 @@ using namespace KETTLE;
 namespace KETTLE{
     class InnetAddr;
     class TcpConnection{
+
+            // zhege 
+            typedef std::shared_ptr<TcpConnection>  TcpConnectionPtr;
+            typedef std::function<void(TcpConnectionPtr ptr,std::string& message)> EventCallback;
+            
         public:
             TcpConnection(EventLoop* loop,int32 socket,const InnetAddr& localAddr,
-            const InnetAddr& remoteAddr);
+            const InnetAddr& remoteAddr,EventCallback read_cb,EventCallback write_cb,EventCallback error_cb);
             ~TcpConnection();
 
             Channel* getChannel() const {return _channel.get();}
@@ -34,6 +39,10 @@ namespace KETTLE{
             std::unique_ptr<TcpBuffer>      _writeBuffer;
             std::unique_ptr<TcpBuffer>      _readBuffer;
             std::unique_ptr<Channel>        _channel;
+            EventCallback                   _read_callback;
+            EventCallback                   _write_complete_callback;
+            EventCallback                   _error_callback;
+
 
     };
 }

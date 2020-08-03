@@ -4,12 +4,17 @@
 #include "EventLoop.h"
 
 TcpConnection::TcpConnection(EventLoop* loop,int32 socket,const InnetAddr& localAddr,
-const InnetAddr& remoteAddr):_loop(loop),_socket(new TcpSocket(socket)),
+const InnetAddr& remoteAddr,EventCallback read_cb,EventCallback write_cb,EventCallback error_cb):
+_loop(loop),_socket(new TcpSocket(socket)),
 _localAddress(new InnetAddr(localAddr)),
 _remoteAddress(new InnetAddr(remoteAddr)),
 _channel(new Channel(loop,socket,std::bind(&TcpConnection::handlRead,this)
                     ,std::bind(&TcpConnection::handlWrite,this)
-                    ,std::bind(&TcpConnection::handError,this))){
+                    ,std::bind(&TcpConnection::handError,this)))
+,_read_callback(read_cb)
+,_write_complete_callback(write_cb)
+,_error_callback(error_cb)
+{
 
 }
 
@@ -30,7 +35,7 @@ void TcpConnection::handlRead(){
 
     ssize_t read_size = ::readv(_socket->GetSocket(),&iov[0],2);
     if(read_size < 0)
-        handError();
+        return handError();
     else if(read_size <= spaceSize)
         _readBuffer->writeData(read_size);
     else{
@@ -38,24 +43,12 @@ void TcpConnection::handlRead(){
         _readBuffer->writeData(spaceSize);
         _readBuffer->append(static_cast<char*>(iov[1].iov_base),nAotherSize);
     }
+
+    std::string message(std::move(_readBuffer->retrieve()));
+    _read_callback(TcpConnectionPtr(this),message);
 }
 
 void TcpConnection::handlWrite(){
-<<<<<<< HEAD
-    // if use LT mode ,and writebuff is empty ,need remove epollwriteevent
-
-    if(_writeBuffer->dataSize() == 0){
-    }
-    else
-        ssize_t nWriteSize = ::send(_socket->GetSocket(),_writeBuffer->data(),_writeBuffer->dataSize(),0);
-        if(nWriteSize > 0)
-            _writeBuffer->readData(nWriteSize);
-        else{
-            handError();
-        }
-    }
-
-=======
 
     KETTLE::uint32 dataSize = _writeBuffer->dataSize();
     if(dataSize){
@@ -66,11 +59,8 @@ void TcpConnection::handlWrite(){
             handError();
     }else{
         // if dataSzie == 0 then reset event
-        _channel->setEvens(EPOLLIN|EPOLLET);
-        _loop->updateChannel(_channel.get());
+        _channel->setEvens(EPOLLIN|EPOLLERR);
     }
-    
->>>>>>> c05ae955190d5fd615461b8474bc67aaea693cb2
 }
 
 void TcpConnection::handError(){
@@ -82,12 +72,8 @@ void TcpConnection::WriteData(const char* buffer,size_t nSize){
     // need lock?
     _writeBuffer->append(buffer,nSize);
 
-<<<<<<< HEAD
+    _channel->setEvens(EPOLLIN|EPOLLOUT);
 }
-void TcpConnection::connectDestroy(){
 
-=======
-    _channel->setEvens(EPOLLOUT|EPOLLIN|EPOLLET);
-    _loop->updateChannel(_channel.get());
->>>>>>> c05ae955190d5fd615461b8474bc67aaea693cb2
+void TcpConnection::connectDestroy(){
 }

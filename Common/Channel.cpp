@@ -17,7 +17,7 @@ KETTLE::Channel::~Channel(){}
 
 void KETTLE::Channel::handleEvent(int event){
 
-    if(event & EPOLLIN)
+    if(event & EPOLLIN | EPOLLPRI | EPOLLHUP)
         _read();
     if(event & EPOLLOUT)
         _write();
