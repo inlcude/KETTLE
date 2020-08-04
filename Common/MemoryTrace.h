@@ -19,6 +19,7 @@ namespace KETTLE{
 
 }
 
+/*
 void* operator new(size_t size);
 void* operator new(size_t size,const char* file,int line);
 void* operator new[](size_t size);
@@ -28,7 +29,8 @@ void operator delete(void* p);
 void operator delete(void* p,const char* file,int line);
 void operator delete[](void* p);
 void operator delete[](void* p,const char* file,int line);
+*/
 
-#define KETTLE_NEW(size) new(size,__FILE__,__LINE__)
+#define KETTLE_NEW ::new
 #define new KETTLE_NEW
 #endif

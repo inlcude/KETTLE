@@ -40,6 +40,6 @@ std::string CommonFunction::tid(){
     pthread_t tid = ::pthread_self();
 }
 
-pthread_t CommonFunction::GetSelfThreadId(){
+int64 CommonFunction::GetSelfThreadId(){
     return ::pthread_self();
 }

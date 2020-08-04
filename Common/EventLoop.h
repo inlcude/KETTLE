@@ -35,7 +35,6 @@ namespace KETTLE{
         int32                               _eventfd;
         std::unique_ptr<Channel>            _eventChannel;
         std::atomic<bool>                   _running;
-        std::unique_ptr<EpollPoller>        _poller;
         std::vector<FUNCTOR>                _functors;
     };
 }

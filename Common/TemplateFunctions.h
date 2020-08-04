@@ -18,7 +18,7 @@ namespace KETTLE
         static std::string GetAppName();
         static std::string now();
         static std::string tid();
-        static pthread_t GetSelfThreadId();
+        static int64 GetSelfThreadId();
         static std::string getLogHead();
 
     };

@@ -11,12 +11,15 @@
 using namespace KETTLE;
 namespace KETTLE{
     class TcpServer{
+    public:
         typedef std::shared_ptr<TcpConnection>  TcpConnectionPtr;
         typedef std::unordered_map<int32,TcpConnectionPtr>  ConnectionHashMap;
         typedef std::unordered_map<int32,TcpConnectionPtr>::const_iterator CTC_ITER;
         typedef std::unordered_map<int32,TcpConnectionPtr>::iterator        TC_ITER;
+        typedef std::function<void(TcpConnectionPtr ptr,std::string& message)> EventCallback;
     public:
-        TcpServer(const char* ip,uint16 port,int32 threadNum);
+        TcpServer(const char* ip,uint16 port,int32 threadNum,
+        EventCallback read_cb,EventCallback write_cb,EventCallback error_cb);
         ~TcpServer();
 
         void start();
@@ -35,6 +38,9 @@ namespace KETTLE{
         ConnectionHashMap               _connectionHashMap;
         // mt event pool
         std::unique_ptr<ThreadEventPool> _eventPool;
+        EventCallback                   _read_cb;
+        EventCallback                   _write_cb;
+        EventCallback                   _error_cb;
     };
 }
 #endif

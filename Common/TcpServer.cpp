@@ -2,7 +2,8 @@
 #include"EventLoop.h"
 #include"Log.h"
 
-TcpServer::TcpServer(const char* ip,uint16 port,int32 threadNum)
+TcpServer::TcpServer(const char* ip,uint16 port,int32 threadNum,
+EventCallback read_cb,EventCallback write_cb,EventCallback error_cb)
 :_eventLoop(new EventLoop()) 
 ,_acceptor(new Acceptor(_eventLoop.get()
                         ,*(_address.get())
@@ -12,7 +13,10 @@ TcpServer::TcpServer(const char* ip,uint16 port,int32 threadNum)
                                     ,std::placeholders::_2)))
 ,_running(false)
 ,_address(new InnetAddr(ip,port))
-,_eventPool(new ThreadEventPool(threadNum)){
+,_eventPool(new ThreadEventPool(threadNum))
+,_read_cb(read_cb)
+,_write_cb(write_cb)
+,_error_cb(error_cb){
 }
 
 TcpServer::~TcpServer(){
@@ -21,7 +25,7 @@ TcpServer::~TcpServer(){
 
 void TcpServer::loop(){
     // dothing;
-    _eventLoop->loop();
+    _eventLoop->startLoop();
 }
 
 void TcpServer::start(){
@@ -34,7 +38,13 @@ void TcpServer::start(){
 
 void TcpServer::handlAccept(int32 sockfd,const InnetAddr& address){
     
-    TcpConnectionPtr connection = std::make_shared<TcpConnection>(_eventLoop.get(),sockfd,*(_address.get()),address);
+    TcpConnectionPtr connection = std::make_shared<TcpConnection>(_eventLoop.get()
+    ,sockfd
+    ,*(_address.get())
+    ,address
+    ,_read_cb
+    ,_write_cb
+    ,_error_cb);
     if(_connectionHashMap.find(sockfd) != _connectionHashMap.end())
         _connectionHashMap[sockfd] = connection;
     else

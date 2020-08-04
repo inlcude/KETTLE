@@ -4,6 +4,7 @@
 #include "EpollPoller.h"
 #include "Log.h"
 #include "Channel.h"
+#include "TemplateFunctions.h"
 
 EventLoop::EventLoop():_running(false),
 _poller(new EpollPoller())
@@ -31,7 +32,8 @@ void EventLoop::removeChannel(Channel* channel){
 }
 
 void EventLoop::startLoop(){
-
+    _running = true;
+    this->loop();
 }
 
 
@@ -59,10 +61,8 @@ void EventLoop::wakeUp(){
         LOG_FATA << "EventLoop::wakeUp error,reason" << ::strerror(errno);
 }
 
-void EventLoop::startLoop(){
-
-}
 void EventLoop::loop(){
+    LOG_INFO << "thread: " << CommonFunction::GetSelfThreadId() << " started...";
     while(_running){
         _poller->poller();
 
@@ -75,6 +75,7 @@ void EventLoop::loop(){
         for(auto& it : temp)
             it();
     }
+    LOG_INFO << "thread: " << CommonFunction::GetSelfThreadId() << " exit...";
 }
 
 void EventLoop::handRead(){

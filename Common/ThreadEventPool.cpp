@@ -14,7 +14,7 @@ ThreadEventPool::ThreadEventPool(int32 threadNum):_threadNum(threadNum){
         _eventPool[i] = new EventLoop();
 
     for (int32 i = 0; i < threadNum; i++)
-        _threadPool[i] = new Thread(std::bind(&EventLoop::loop,_eventPool[i]));
+        _threadPool[i] = new Thread(std::bind(&EventLoop::startLoop,_eventPool[i]));
 }
 
 EventLoop* ThreadEventPool::getNextLoop(){

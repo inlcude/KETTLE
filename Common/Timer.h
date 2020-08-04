@@ -6,6 +6,7 @@
 using namespace KETTLE;
 namespace KETTLE{
     class TimerQuene;
+    class EventLoop;
     
 class Timer{
     friend class TimerQuene;
