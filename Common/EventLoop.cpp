@@ -16,6 +16,7 @@ _poller(new EpollPoller())
                             ,std::bind(&EventLoop::handError,this)))
 
 {
+    _eventChannel->setEvens(EPOLLIN|EPOLLOUT|EPOLLERR);
     _poller->registerInPoller(_eventChannel.get());
 }
 

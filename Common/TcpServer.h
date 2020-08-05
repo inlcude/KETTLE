@@ -7,6 +7,7 @@
 #include"TcpConnection.h"
 #include"EventLoop.h"
 #include"ThreadEventPool.h"
+#include "AsynLog.h"
 
 using namespace KETTLE;
 namespace KETTLE{
@@ -29,7 +30,12 @@ namespace KETTLE{
         void handlAccept(int32 sockfd,const InnetAddr& address);
         void handleRemoveConnection(TcpConnectionPtr connection);
         void loop();
+
+        static void OutPut(const char* log,int len);
+        static void Flush();
     private:
+        static TcpServer*               _this;
+        std::unique_ptr<AsynLog>        _asynLog;
         bool                            _running;
         // main pool
         std::shared_ptr<EventLoop>      _eventLoop;

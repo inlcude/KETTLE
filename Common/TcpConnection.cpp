@@ -15,7 +15,8 @@ _channel(new Channel(loop,socket,std::bind(&TcpConnection::handlRead,this)
 ,_write_complete_callback(write_cb)
 ,_error_callback(error_cb)
 {
-
+    _socket->setNonblock(true);
+    _socket->setNodelay(true);
 }
 
 TcpConnection::~TcpConnection(){

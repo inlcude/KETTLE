@@ -14,10 +14,12 @@ _loop(loop)
 
     _listenSocket.reset(new TcpSocket(sockfd));
     _listenSocket->setReuseAddress(true);
+    _listenSocket->setNonblock(true);
 
     channel = std::make_shared<Channel>(loop,sockfd,std::bind(&Acceptor::read,this)
     ,std::bind(&Acceptor::write,this)
     ,std::bind(&Acceptor::error,this));
+    channel->setEvens(EPOLLIN|EPOLLOUT|EPOLLERR);
 
     _listenSocket->bindAddress(*(_addr.get()));
     _listenSocket->listen();

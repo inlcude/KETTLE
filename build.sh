@@ -2,4 +2,4 @@
 mkdir BUILD
 cd BUILD
 cmake ../
-make
+make -j16

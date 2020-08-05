@@ -105,9 +105,6 @@ logLevel(level){
     stream << "[" << LOGGER_LEVEL[level] << "]" << 
     "[" << std::string(std::move(CommonFunction::now())) << "]"
     << "[" << CommonFunction::GetSelfThreadId() << "]";
-
-    if(level == KETTLE_LOGGER_LEVEL_FATA)
-        ::exit(1);
 }
 
 Logger::~Logger(){
@@ -115,14 +112,19 @@ Logger::~Logger(){
     outfunc(stream.data(),stream.length()+1);
     flushfunc();
 
+    if (outfunc != Logger::DefaultWrite){
+        Logger::DefaultWrite(stream.data(),stream.length()+1);
+        Logger::DefaultFlush();
+    }
+
     if(logLevel >= KETTLE_LOGGER_LEVEL_FATA)
         std::abort();
 }
 
 void Logger::DefaultWrite(const char* log,int len){
-    fwrite(log,len,1,stdout);
+    ::fwrite(log,len,1,stdout);
 }
 
 void Logger::DefaultFlush(){
-    fflush(stdout);
+    ::fflush(stdout);
 }

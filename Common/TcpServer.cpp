@@ -2,9 +2,12 @@
 #include"EventLoop.h"
 #include"Log.h"
 
+TcpServer* TcpServer::_this = nullptr;
+
 TcpServer::TcpServer(const char* ip,uint16 port,int32 threadNum,
 EventCallback read_cb,EventCallback write_cb,EventCallback error_cb)
-:_eventLoop(new EventLoop()) 
+:_asynLog(new AsynLog)
+,_eventLoop(new EventLoop()) 
 ,_acceptor(new Acceptor(_eventLoop.get()
                         ,*(_address.get())
                         ,std::bind(&TcpServer::handlAccept
@@ -17,10 +20,24 @@ EventCallback read_cb,EventCallback write_cb,EventCallback error_cb)
 ,_read_cb(read_cb)
 ,_write_cb(write_cb)
 ,_error_cb(error_cb){
+    _this = this;
+
+    KETTLE::Logger::setOutPutFunc(TcpServer::OutPut);
+    KETTLE::Logger::setFlushFunc(TcpServer::Flush);
+
+    _asynLog->start();
 }
 
 TcpServer::~TcpServer(){
 
+}
+
+void TcpServer::OutPut(const char* log,int len){
+    _this->_asynLog->append(log,len);
+}
+
+void TcpServer::Flush(){
+    _this->_asynLog->flush();
 }
 
 void TcpServer::loop(){
@@ -28,9 +45,12 @@ void TcpServer::loop(){
     _eventLoop->startLoop();
 }
 
+void TcpServer::exit(){
+    _asynLog->stop();
+}
+
 void TcpServer::start(){
     LOG_INFO << "Tcp server start,listen on " << _address->getIP() << " listen on port:" << _address->getPort();
-    _eventLoop->runInLoop(_acceptor->get_channel());
     _running = true;
     _eventPool->start();
     loop();

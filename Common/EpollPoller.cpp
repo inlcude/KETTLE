@@ -41,7 +41,8 @@ void EpollPoller::updateChannel(EO_EVENTS operation,Channel* channel){
     int32 op = epoll_ctl_events[operation];
 
     if(::epoll_ctl(_epollfd,op,sockfd,&e_event) != 0)
-        LOG_FATA << "cpoll_ctl failed,reason:" << strerror(errno);
+        LOG_FATA << "epoll_ctl failed,reason:" << strerror(errno) << ",epoll_fd:" << _epollfd
+        << ",sockfd:" << sockfd;
 }
 
 void EpollPoller::updateChannel(Channel* channel){
